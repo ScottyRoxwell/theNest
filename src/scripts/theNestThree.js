@@ -1,18 +1,23 @@
 import {THREE} from '../vendor';
 import noise from './utils/perlinNoise';
 import { PointsMaterial } from 'three';
+import { thisExpression } from 'babel-types';
 const width = window.innerWidth;
 const height = window.innerHeight;
+
 const scene = new THREE.Scene();
-// PerspectiveCamera FOV parameter: 0 - 180 degrees
 const camera = new THREE.PerspectiveCamera(40,width/height,1,1000);
 // console.log(window.innerWidth)
 
 // var light = new THREE.PointLight( 0xffffff, 100, 500);
 // scene.add( light );
 
-var ambient= new THREE.AmbientLight( 0xffffff, .6); // soft white light
-scene.add( ambient );
+document.body.addEventListener('mousemove', moveCircle);
+
+function moveCircle(e){
+  circle.position.x = e.clientX;
+  circle.position.y = -e.clientY;
+}
 
 camera.position.z = 250;
 camera.position.y = 0;
@@ -47,6 +52,13 @@ function createParticles(amount){
   scene.add(stars);
   return stars;
 }
+
+let backSplashGeo = new THREE.CircleGeometry(20,30);
+let backSplashMat = new THREE.MeshBasicMaterial({color: 0xffccaa});
+let circle = new THREE.Mesh( backSplashGeo, backSplashMat);
+circle.position.z = 50;
+circle.scale.setX(1.2);
+scene.add(circle)
 
 const universe = createParticles(15000);
 

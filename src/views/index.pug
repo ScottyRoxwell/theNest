@@ -2,7 +2,13 @@ extends layout
 
 block content
   #canvas
+  svg(height="100%" width="100%")
+    defs
+      mask(id="mask" x="0" y="0" height="100%" width="100%")
+        rect(x="0" y="0" height="100%" width="100%")
+        circle(cx="500" cy="500" r="20" fill="red")
   .main
-    img(src="../images/nestFront.png")
+    img(src="../images/nestFron3.png") 
+  
   .section
-    p For the best in entertainment and cocktail, come on down to The Nest! Live music, hot cougars, sugar daddies galore! For a night filled with the smell of martinis and old people sweat come of down for a night of fun at The Nest!
+    p For the best in local entertainment and cocktails, come on down to The Nest! Live music, hot cougars, sugar daddies galore! For a night filled with the smell of martinis and old people sweat come on down to The Nest!
