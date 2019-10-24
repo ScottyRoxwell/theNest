@@ -1,6 +1,10 @@
 import {THREE} from '../vendor';
+import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
+
 import { thisExpression } from 'babel-types';
+
+
 const width = window.innerWidth;
 const height = window.innerHeight;
 
@@ -25,19 +29,32 @@ loader.load("../images/nestFron3.png", function(image){
   let theNestPlane = new THREE.PlaneBufferGeometry(width,height);
   let theNest = new THREE.Mesh(theNestPlane,material);
   theNest.rotateY(Math.PI)
-  scene.add(theNest)
+  // scene.add(theNest)
 });
 
-
-
-
 const backSplashGeo = new THREE.CircleGeometry(200,30);
-const backSplashMat = new THREE.MeshBasicMaterial({color: 0xffccaa });
+const backSplashMat = new THREE.MeshBasicMaterial({color: 0xffffff });
 const circle = new THREE.Mesh( backSplashGeo, backSplashMat);
-circle.position.set(-340,-95,20);
+circle.position.set(-340,-155,20);
 scene.add(circle)
 
-var light = new THREE.DirectionalLight( 0xffffff);
+let godraysEffect = new GodRaysEffect(camera, circle,{
+  resolutionScale: 1,
+  density: 0.6,
+  decay: 0.95,
+  weight: 0.9,
+  samples: 100
+})
+
+let renderPass = new RenderPass(scene,camera);
+let effectPass = new EffectPass(camera,godraysEffect);
+effectPass.renderToScreen = true;
+
+let composer = new EffectComposer(renderer);
+composer.addPass(renderPass);
+composer.addPass(effectPass);
+
+const light = new THREE.DirectionalLight( 0xffffff);
 light.position.set(-340,-95,5)
 light.lookAt(-350,-30,-5)
 scene.add( light );
@@ -99,8 +116,8 @@ const animate = function () {
     s.update(delta);
   });
 
-
-	renderer.render( scene, camera );
+  composer.render(0.1);
+	// renderer.render( scene, camera );
 };
 
 animate();
