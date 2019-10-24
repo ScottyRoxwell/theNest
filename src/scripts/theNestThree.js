@@ -1,24 +1,11 @@
 import {THREE} from '../vendor';
 import noise from './utils/perlinNoise';
-import { PointsMaterial, DepthPackingStrategies } from 'three';
-import { thisExpression, objectMethod } from 'babel-types';
+import { thisExpression } from 'babel-types';
 const width = window.innerWidth;
 const height = window.innerHeight;
 
 const scene = new THREE.Scene();
 const camera = new THREE.OrthographicCamera(width/-2,width/2,height/-2,height/2,1,1000);
-// const camera = new THREE.PerspectiveCamera(50,width/height,1,1000);
-// console.log(window.innerWidth)
-
-// var light = new THREE.PointLight( 0xffffff, 100, 500);
-// scene.add( light );
-
-// document.body.addEventListener('mousemove', moveCircle);
-
-// function moveCircle(e){
-//   circle.position.x = e.clientX;
-//   circle.position.y = -e.clientY;
-// }
 
 camera.position.z = -1;
 camera.position.y = 0;
@@ -29,37 +16,40 @@ renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
 
-// let geometry = new THREE.Geometry();
-// let particles = [];
-// function createParticles(amount){
+const loader = new THREE.ImageBitmapLoader();
+loader.setOptions({imageOrientation: 'flipY', resizeQuality: 'high'});
+loader.load("../images/nestFron3.png", function(image){
+  let texture = new THREE.CanvasTexture(image);
+  texture.format
+  let material = new THREE.MeshBasicMaterial({map:texture, transparent: true, side: THREE.DoubleSide});
+  let theNestPlane = new THREE.PlaneBufferGeometry(width,height);
+  let theNest = new THREE.Mesh(theNestPlane,material);
+  theNest.rotateY(Math.PI)
+  scene.add(theNest)
+});
 
-//   for(let i = 0; i < amount; i++){
-//     let particle = new THREE.Vector3(
-//       Math.cos(Math.random()*Math.PI*2) * Math.random() * (width/2 + 50),
-//       Math.sin(Math.random()*Math.PI*2) * Math.random() * (width/2 + 50),
-//       0 
-//     );
-//     particle.size = Math.random()*(2-.3);
-//     geometry.vertices.push(particle);    
-//     particles.push(particle);
-//   }
-//   let material = new THREE.PointsMaterial({
-//     color: 0xffffff,
-//     transparent: true,
 
-//   });
-//   let stars = new THREE.Points( geometry, material );
-//   scene.add(stars);
-//   return stars;
+
+
+const backSplashGeo = new THREE.CircleGeometry(200,30);
+const backSplashMat = new THREE.MeshBasicMaterial({color: 0xffccaa });
+const circle = new THREE.Mesh( backSplashGeo, backSplashMat);
+circle.position.set(-340,-95,20);
+scene.add(circle)
+
+var light = new THREE.DirectionalLight( 0xffffff);
+light.position.set(-340,-95,5)
+light.lookAt(-350,-30,-5)
+scene.add( light );
+
+// document.body.addEventListener('mousemove', moveCircle);
+
+// function moveCircle(e){
+//   circle.position.x = -e.clientX;
+//   circle.position.y = e.clientY;
 // }
 
-// let backSplashGeo = new THREE.CircleGeometry(20,30);
-// let backSplashMat = new THREE.MeshBasicMaterial({color: 0xffccaa});
-// let circle = new THREE.Mesh( backSplashGeo, backSplashMat);
-// circle.position.z = 2000;
-// circle.scale.setX(2);
-// scene.add(circle)
-let particle = {
+const particle = {
 
   scale: 1,
   radius: null,
@@ -75,6 +65,7 @@ let particle = {
     obj.theta = Math.random()*Math.PI*2;
     obj.mesh.position.x = Math.cos(obj.theta) * obj.radius;
     obj.mesh.position.y = Math.sin(obj.theta) * obj.radius;
+    obj.mesh.position.z = 30;
     obj.mesh.scale.x = obj.scale;
     obj.mesh.scale.y = obj.scale;
     return obj;
@@ -87,7 +78,7 @@ let particle = {
   }
 }
 
-let stars = [];
+const stars = [];
 function createSky(amount){
   for(let i = 0; i < amount; i++){
     let star = particle.create();
@@ -102,13 +93,12 @@ createSky(1000)
 let delta = 0;
 const animate = function () {
   requestAnimationFrame( animate );
-  delta = 0.0001;
+  delta = 0.00011;
 
   stars.forEach(s => {
     s.update(delta);
-    // s.mesh.position.x = Math.cos(s.theta + delta) * s.radius;
-    // s.mesh.position.y = Math.sin(s.theta + delta) * s.radius;
   });
+
 
 	renderer.render( scene, camera );
 };
