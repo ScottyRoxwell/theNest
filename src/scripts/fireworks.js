@@ -3,7 +3,6 @@ import noise from './utils/perlinNoise';
 
 import {vector} from './vector';
 import {particle} from './particle';
-// import { updateExpression } from 'babel-types';
 
 window.onload = function(){
  
