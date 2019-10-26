@@ -9,9 +9,10 @@ const width = window.innerWidth;
 const height = window.innerHeight;
 
 const scene = new THREE.Scene();
-const camera = new THREE.OrthographicCamera(width/-2,width/2,height/-2,height/2,1,1000);
+// const camera = new THREE.OrthographicCamera(width/-2,width/2,height/-2,height/2,1,1000);
+const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
 
-camera.position.z = -1;
+camera.position.z = 560;
 camera.position.y = 0;
 camera.lookAt(0,0,0);
 
@@ -20,24 +21,30 @@ renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
 
-const loader = new THREE.ImageBitmapLoader();
-loader.setOptions({imageOrientation: 'flipY', resizeQuality: 'high'});
-loader.load("../images/nestFron3.png", function(image){
-  let texture = new THREE.CanvasTexture(image);
-  texture.format
-  let material = new THREE.MeshBasicMaterial({map:texture, transparent: true, side: THREE.DoubleSide});
-  let theNestPlane = new THREE.PlaneBufferGeometry(width,height);
-  let theNest = new THREE.Mesh(theNestPlane,material);
-  theNest.rotateY(Math.PI)
-  // scene.add(theNest)
-});
+// THE NEST
+const loader = new THREE.TextureLoader();
+let theNestMat = loader.load('../images/nestFron3.png');
+theNestMat.minFilter = THREE.LinearFilter;
+// theNestMat.flipY = false;
+let nestMaterial = new THREE.MeshBasicMaterial({map:theNestMat, transparent: true, side: THREE.FrontSide});
+let theNestPlane = new THREE.PlaneBufferGeometry(1,1);
+let theNest = new THREE.Mesh(theNestPlane,nestMaterial);
+theNest.scale.x = 1920;
+theNest.scale.y = 1280;
+theNest.position.y = -100;
+theNest.position.z = -10
+// theNest.rotateY(Math.PI)
+scene.add(theNest)
 
-const backSplashGeo = new THREE.CircleGeometry(200,30);
-const backSplashMat = new THREE.MeshBasicMaterial({color: 0xffffff });
-const circle = new THREE.Mesh( backSplashGeo, backSplashMat);
-circle.position.set(-340,-155,20);
+
+// MOON
+const moonGeo = new THREE.CircleGeometry(200,30);
+const moonMat = new THREE.MeshBasicMaterial({color: 0xffffff });
+const circle = new THREE.Mesh( moonGeo, moonMat);
+circle.position.set(340, 250, -20);
 scene.add(circle)
 
+// GODRAYS
 let godraysEffect = new GodRaysEffect(camera, circle,{
   resolutionScale: 1,
   density: 0.6,
@@ -54,10 +61,10 @@ let composer = new EffectComposer(renderer);
 composer.addPass(renderPass);
 composer.addPass(effectPass);
 
-const light = new THREE.DirectionalLight( 0xffffff);
-light.position.set(-340,-95,5)
-light.lookAt(-350,-30,-5)
-scene.add( light );
+// const light = new THREE.DirectionalLight( 0xffffff);
+// light.position.set(-340,-95,5)
+// light.lookAt(-350,-30,-5)
+// scene.add( light );
 
 // document.body.addEventListener('mousemove', moveCircle);
 
@@ -66,8 +73,9 @@ scene.add( light );
 //   circle.position.y = e.clientY;
 // }
 
-const particle = {
 
+// STARS
+const particle = {
   scale: 1,
   radius: null,
   theta: null,
@@ -82,12 +90,11 @@ const particle = {
     obj.theta = Math.random()*Math.PI*2;
     obj.mesh.position.x = Math.cos(obj.theta) * obj.radius;
     obj.mesh.position.y = Math.sin(obj.theta) * obj.radius;
-    obj.mesh.position.z = 30;
+    obj.mesh.position.z = -30;
     obj.mesh.scale.x = obj.scale;
     obj.mesh.scale.y = obj.scale;
     return obj;
   },
-
   update: function(delta){
     this.theta += delta;
     this.mesh.position.x = Math.cos(this.theta) * this.radius;
@@ -111,6 +118,8 @@ let delta = 0;
 const animate = function () {
   requestAnimationFrame( animate );
   delta = 0.00011;
+
+  theNest.position.y -= delta*1000
 
   stars.forEach(s => {
     s.update(delta);
