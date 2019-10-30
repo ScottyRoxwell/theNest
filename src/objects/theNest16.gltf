@@ -1,0 +1,119 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v0.9.36",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "path20",
+      "scale": [
+        10.116840362548828,
+        10.116840362548828,
+        10.116840362548828
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Material.003",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 0.5
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "path20",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1
+          },
+          "indices": 2,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "source": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "nestFron4",
+      "uri": "theNest16_img0.jpg"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 25349,
+      "max": [
+        0.494192510843277,
+        0,
+        -2.9802322387695312e-8
+      ],
+      "min": [
+        0,
+        0,
+        -0.3157499432563782
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 25349,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5123,
+      "count": 57237,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 304188,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 304188,
+      "byteOffset": 304188
+    },
+    {
+      "buffer": 0,
+      "byteLength": 114476,
+      "byteOffset": 608376
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "theNest16_data.bin",
+      "byteLength": 722852
+    }
+  ]
+}

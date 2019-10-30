@@ -1,0 +1,119 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v0.9.36",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "Plane",
+      "translation": [
+        1.0327969789505005,
+        0,
+        -1.03279709815979
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Material.001",
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0,
+          "texCoord": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 0.5
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Plane",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "TEXCOORD_0": 1
+          },
+          "indices": 2,
+          "material": 0
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "source": 0
+    }
+  ],
+  "images": [
+    {
+      "name": "nestFron4",
+      "uri": "theNest12_img0.png"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 68,
+      "max": [
+        53.12336349487305,
+        0,
+        1.03279709815979
+      ],
+      "min": [
+        -1.0327969789505005,
+        0,
+        -33.68419647216797
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 68,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5123,
+      "count": 108,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 816,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 544,
+      "byteOffset": 816
+    },
+    {
+      "buffer": 0,
+      "byteLength": 216,
+      "byteOffset": 1360
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "theNest12_data.bin",
+      "byteLength": 1576
+    }
+  ]
+}
