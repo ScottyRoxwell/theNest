@@ -37,27 +37,34 @@ function moveNest(e){
 
 // THE NEST
 const loader = new THREE.GLTFLoader();
-loader.load('../objects/theNest20.glb', (gltf) => {
+loader.load('../objects/theNest28.glb', (gltf) => {
   let nest = gltf.scene.children[0];
 
-  nest.rotation.x = Math.PI/2
+  nest.rotation.x = Math.PI/2;
   // nest.rotation.z = Math.PI/2
-  nest.scale.x = 32
-  nest.scale.y = 32
-  nest.scale.z = 32
-  nest.position.y = -200
-  nest.position.z = -10
-  scene.add(gltf.scene)
-  console.log(nest)
-  renderer.render(scene,camera)
+  nest.scale.x = 32;
+  nest.scale.y = 32;
+  nest.scale.z = 32;
+  nest.position.y = -200;
+  nest.position.z = -10;
+  scene.add(gltf.scene);
+  console.log(nest);
+  renderer.render(scene,camera);
 })
 
 // MOON
-const moonGeo = new THREE.CircleGeometry(50,30);
+const moonGeo = new THREE.CircleGeometry(70,30);
 const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
 const circle = new THREE.Mesh( moonGeo, moonMat);
-circle.position.set(250, 182, -20);
+circle.position.set(250, 162, -20);
 scene.add(circle)
+
+// MOON 2
+const moonGeo2 = new THREE.CircleGeometry(70,30);
+const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777788});
+const circle2 = new THREE.Mesh( moonGeo2, moonMat2);
+circle2.position.set(250, 102, -20);
+scene.add(circle2)
 
 // GODRAYS
 let godraysEffect = new GodRaysEffect(camera, circle,{
@@ -69,13 +76,24 @@ let godraysEffect = new GodRaysEffect(camera, circle,{
   blur: false
 });
 
+let godraysEffect2 = new GodRaysEffect(camera, circle2,{
+  resolutionScale: .7,
+  density: 3,
+  decay: .97,
+  weight: .2,
+  samples: 320,
+  blur: false
+});
+
 let renderPass = new RenderPass(scene,camera);
 let effectPass = new EffectPass(camera,godraysEffect);
-effectPass.renderToScreen = true;
+let effectPass2 = new EffectPass(camera,godraysEffect2);
+effectPass2.renderToScreen = true;
 
 let composer = new EffectComposer(renderer);
 composer.addPass(renderPass);
 composer.addPass(effectPass);
+composer.addPass(effectPass2);
 
 // STARS
 const particle = {
@@ -140,7 +158,7 @@ scene.add(light3);
 
 // AMBIENT LIGHT
 const light = new THREE.AmbientLight(0xffeeee, .3);
-scene.add(light)
+scene.add(light);
 
 // DIRECTIONAL LIGHT
 // const directional = new THREE.DirectionalLight(0xffffff,2);
@@ -151,21 +169,21 @@ scene.add(light)
 // scene.add(directional);
 
 // HEADLIGHTS
-// const headlight1 = new THREE.SpotLight(0xbbbbff,1.3);
-// headlight1.penumbra = .4
-// headlight1.angle = Math.PI/6
-// headlight1.position.set(0,-300,800);
-// headlight1.target = new THREE.Object3D();
-// scene.add(headlight1.target);
-// scene.add(headlight1);
+const headlight1 = new THREE.SpotLight(0xbbbbff,1.3);
+headlight1.penumbra = .4;
+headlight1.angle = Math.PI/6;
+headlight1.position.set(0,-300,800);
+headlight1.target = new THREE.Object3D();
+scene.add(headlight1.target);
+scene.add(headlight1);
 
-// const headlight2 = new THREE.SpotLight(0xbbbbff,1.3);
-// headlight2.penumbra = .4
-// headlight2.angle = Math.PI/6
-// headlight2.position.set(600,-300,800);
-// headlight2.target = new THREE.Object3D();
-// scene.add(headlight2.target);
-// scene.add(headlight2);
+const headlight2 = new THREE.SpotLight(0xbbbbff,1.3);
+headlight2.penumbra = .4;
+headlight2.angle = Math.PI/6;
+headlight2.position.set(600,-300,800);
+headlight2.target = new THREE.Object3D();
+scene.add(headlight2.target);
+scene.add(headlight2);
 
 // SHOOTING STARS
 const shootingStar = {
@@ -186,7 +204,7 @@ function createSky(amount){
   }
 }
 
-createSky(1000)
+createSky(1000);
 
 let delta = 0;
 let pdelta = 0;
@@ -204,8 +222,8 @@ const animate = function () {
   light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
   light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
 
-  // headlight1.target.position.set(mouseX,mouseY,-10);
-  // headlight2.target.position.set(mouseX+400,mouseY,-10);
+  headlight1.target.position.set(mouseX,mouseY,-10);
+  headlight2.target.position.set(mouseX+400,mouseY,-10);
 
   let moonMaxHeight = 690;
   circle.position.y += (circle.position.y >= moonMaxHeight-200) ? 0 : (moonMaxHeight-circle.position.y)*.0002;
