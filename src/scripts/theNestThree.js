@@ -9,11 +9,13 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
+const start = new THREE.Vector3(170,91,-20);
+const end = new THREE.Vector3(380,155,-20);
+const shootingStars = [];
 
 const scene = new THREE.Scene();
 // const camera = new THREE.OrthographicCamera(width/-2,width/2,height/-2,height/2,1,1000);
 const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
-// scene.add(camera)
 
 camera.position.z = 570;
 camera.position.y = 0;
@@ -37,37 +39,46 @@ function moveNest(e){
 
 // THE NEST
 const loader = new THREE.GLTFLoader();
-loader.load('../objects/theNest28.glb', (gltf) => {
+loader.load('../objects/theNest35.glb', (gltf) => {
   let nest = gltf.scene.children[0];
-
   nest.rotation.x = Math.PI/2;
-  // nest.rotation.z = Math.PI/2
   nest.scale.x = 32;
   nest.scale.y = 32;
   nest.scale.z = 32;
   nest.position.y = -200;
   nest.position.z = -10;
+  // Tranparency settings for development
+  // nest.material.transparent = true;
+  // nest.material.opacity = .5;
   scene.add(gltf.scene);
-  console.log(nest);
   renderer.render(scene,camera);
 })
+
+// ANWING BACKSPLASH PLANE
+const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
+const backsplaceMat = new THREE.MeshPhongMaterial(0xffffff);
+const backsplash = new THREE.Mesh(backsplashGeo,backsplaceMat);
+backsplash.scale.set(180,50,1);
+backsplash.rotation.z = Math.PI/10;
+backsplash.position.set(270,120,-21);
+scene.add(backsplash);
 
 // MOON
 const moonGeo = new THREE.CircleGeometry(70,30);
 const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
-const circle = new THREE.Mesh( moonGeo, moonMat);
-circle.position.set(250, 162, -20);
-scene.add(circle)
+const moon = new THREE.Mesh( moonGeo, moonMat);
+moon.position.set(250, 162, -22);
+scene.add(moon);
 
-// MOON 2
-const moonGeo2 = new THREE.CircleGeometry(70,30);
+// AWNING LIGHT
+const moonGeo2 = new THREE.CircleGeometry(40,8);
 const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777788});
-const circle2 = new THREE.Mesh( moonGeo2, moonMat2);
-circle2.position.set(250, 102, -20);
-scene.add(circle2)
+const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
+awningLight.position.set(370,150,-20)
+scene.add(awningLight);
 
 // GODRAYS
-let godraysEffect = new GodRaysEffect(camera, circle,{
+let godraysEffect = new GodRaysEffect(camera, moon,{
   resolutionScale: .7,
   density: 3,
   decay: .97,
@@ -76,11 +87,11 @@ let godraysEffect = new GodRaysEffect(camera, circle,{
   blur: false
 });
 
-let godraysEffect2 = new GodRaysEffect(camera, circle2,{
-  resolutionScale: .7,
-  density: 3,
-  decay: .97,
-  weight: .2,
+let godraysEffect2 = new GodRaysEffect(camera, awningLight,{
+  resolutionScale: .8,
+  density: 4,
+  decay: .951,
+  weight: .21,
   samples: 320,
   blur: false
 });
@@ -123,12 +134,55 @@ const particle = {
   }
 }
 
+// STARRY SKY
+const stars = [];
+function createSky(amount){
+  for(let i = 0; i < amount; i++){
+    let star = particle.create();
+    stars.push(star);
+    scene.add(star.mesh);
+  }
+}
+createSky(1000);
+
+// SHOOTING STARS
+const shootingStar = {
+  scale: 1,
+  speed: null,
+  degree: null,
+  life: 200,
+
+  create: function(){
+    let obj = Object.create(this);
+    let geometry = new THREE.PlaneBufferGeometry(1,1);
+    let material = new THREE.MeshBasicMaterial(0xffffff);
+    obj.mesh = new THREE.Mesh(geometry,material);
+    let size = Math.random()*2+1;
+    obj.speed = Math.random()*11+6,
+    obj.degree = Math.random()*4+3;
+    obj.mesh.scale.set(size,size,1);
+    obj.mesh.position.set(width+20,Math.random()*(height+200)+(height*.7),-29);
+    return obj;
+  },
+  update: function(){
+    this.mesh.position.x -= this.speed;
+    this.mesh.position.y -= this.speed/this.degree;
+    this.life -= 1;
+    let dyingLight = THREE.Math.mapLinear(this.life,0,200,0,1);
+    this.mesh.opacity = dyingLight;
+    if(this.life <= 0) {
+      shootingStars.pop(this);
+      scene.remove(this.mesh);
+    }    
+  }
+}
+
 // NEST LIGHTS
-const lightColor = new THREE.Color(0xffffaa)
+const lightColor = new THREE.Color(0xffffaa);
 const penumbra = .4;
 const light1 = new THREE.SpotLight(lightColor,2);
 light1.penumbra = penumbra;
-light1.position.x = 288;
+light1.position.x = 285;
 light1.position.y = -96;
 light1.position.z = -1;
 light1.target = new THREE.Object3D();
@@ -138,7 +192,7 @@ scene.add(light1);
 
 const light2 = new THREE.SpotLight(lightColor,2);
 light2.penumbra = penumbra;
-light2.position.x = 525;
+light2.position.x = 524;
 light2.position.y = -44;
 light2.position.z = -1;
 light2.target = new THREE.Object3D();
@@ -185,36 +239,18 @@ headlight2.target = new THREE.Object3D();
 scene.add(headlight2.target);
 scene.add(headlight2);
 
-// SHOOTING STARS
-const shootingStar = {
-  scale: 1,
-
-  create: function(){
-    let obj = Object.create(this);
-    let geometry = new THREE.PointGeometry()
-  }
-}
-
-const stars = [];
-function createSky(amount){
-  for(let i = 0; i < amount; i++){
-    let star = particle.create();
-    stars.push(star);
-    scene.add(star.mesh);
-  }
-}
-
-createSky(1000);
-
+//=================== ANIMATION =====================//
 let delta = 0;
 let pdelta = 0;
 let p,q,r;
+let lerper = 0;
+
 const animate = function () {
   requestAnimationFrame( animate );
   delta = 0.00011;
 
   // LIGHT FLICKER
-  pdelta += 0.07
+  pdelta += 0.07;
   p = noise(pdelta);
   q = noise(pdelta*.7);
   r = noise(pdelta*.5);
@@ -222,15 +258,38 @@ const animate = function () {
   light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
   light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
 
+  // HEADLIGHT MOUSE MOVEMENT
   headlight1.target.position.set(mouseX,mouseY,-10);
   headlight2.target.position.set(mouseX+400,mouseY,-10);
 
-  let moonMaxHeight = 690;
-  circle.position.y += (circle.position.y >= moonMaxHeight-200) ? 0 : (moonMaxHeight-circle.position.y)*.0002;
+  // MOONRISE
+  const moonMaxHeight = 690;
+  moon.position.y += (moon.position.y >= moonMaxHeight-250) ? 0 : (moonMaxHeight-moon.position.y)*.0002;
+  
+  // AWNING GODRAYS
+  lerper += .0009;
+  if(awningLight.position.x > end.x){
+    awningLight.position.set(170,91,-20);
+    lerper = 0;
+  } else {
+    awningLight.position.lerpVectors(start,end,lerper);
+  }
 
+  // SHOOTING STARS
+  if(Math.random() > .98){
+    let wish = shootingStar.create();
+    shootingStars.unshift(wish);
+    scene.add(wish.mesh);
+  }
+  shootingStars.forEach(wish => {
+    wish.update();
+  })
+  
+  // SKY ROTATION
   stars.forEach(s => {
     s.update(delta);
   });
+
   composer.render(0.1);
 	// renderer.render( scene, camera );
 };
