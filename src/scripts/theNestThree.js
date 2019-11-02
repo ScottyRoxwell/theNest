@@ -2,7 +2,6 @@ import {THREE} from '../vendor';
 // import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
-import { SceneUtils } from 'three';
 
 
 const GLTFLoader = require('./gltfloader');
@@ -21,7 +20,7 @@ camera.position.z = 570;
 camera.position.y = 0;
 camera.lookAt(0,0,0);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
@@ -115,7 +114,7 @@ const particle = {
   create: function(){
     let obj = Object.create(this);
     let geometry = new THREE.PlaneBufferGeometry(1,1);
-    let material = new THREE.MeshBasicMaterial({ color: 0xffffff});
+    let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
     obj.mesh = new THREE.Mesh(geometry,material);
     obj.radius = Math.random() * (width/2 + 50);
     obj.scale = Math.random()*(2.6-.3) + .3;
@@ -146,34 +145,48 @@ function createSky(amount){
 createSky(1000);
 
 // SHOOTING STARS
-const shootingStar = {
-  scale: 1,
-  speed: null,
-  degree: null,
-  life: 200,
+const star = {
 
-  create: function(){
+  create: function(size){
     let obj = Object.create(this);
-    let geometry = new THREE.PlaneBufferGeometry(1,1);
+    let geometry = new THREE.PlaneBufferGeometry(size,size);
     let material = new THREE.MeshBasicMaterial(0xffffff);
     obj.mesh = new THREE.Mesh(geometry,material);
-    let size = Math.random()*2+1;
-    obj.speed = Math.random()*11+6,
-    obj.degree = Math.random()*4+3;
-    obj.mesh.scale.set(size,size,1);
-    obj.mesh.position.set(width+20,Math.random()*(height+200)+(height*.7),-29);
+    return obj;
+  }
+}
+
+const shootingStar = {
+  speed: 2,
+  degree: 1,
+  size: 1,
+
+  create: function(tailLength){
+    let obj = Object.create(this);
+    obj.wish = new THREE.Group();
+    obj.speed = Math.random()*14.2+11;
+    obj.degree = Math.random()*3.5+.5;
+    obj.size = Math.random()*1.3+.6;
+    obj.wish.position.x = width+20; 
+    obj.wish.position.y = Math.random()*(height+200)+(height*.7);
+    obj.wish.position.z = -29;
+    for(let i = 1; i <= tailLength; i++){
+      let tailDot = star.create(obj.size);
+      tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
+      tailDot.mesh.scale.set(obj.size/(i/1.1),obj.size/(i/1.1),1);
+      obj.wish.add(tailDot.mesh);   
+    }
     return obj;
   },
   update: function(){
-    this.mesh.position.x -= this.speed;
-    this.mesh.position.y -= this.speed/this.degree;
-    this.life -= 1;
-    let dyingLight = THREE.Math.mapLinear(this.life,0,200,0,1);
-    this.mesh.opacity = dyingLight;
-    if(this.life <= 0) {
-      shootingStars.pop(this);
-      scene.remove(this.mesh);
-    }    
+    this.wish.position.x -= this.speed;
+    this.wish.position.y -= this.degree;
+    shootingStars.forEach((wish,i) => {
+      if(wish.wish.position.x < -width/2-100){
+        shootingStars.splice(i,1);
+        scene.remove(wish.wish)
+      } 
+    })
   }
 }
 
@@ -186,7 +199,7 @@ light1.position.x = 285;
 light1.position.y = -96;
 light1.position.z = -1;
 light1.target = new THREE.Object3D();
-light1.target.position.set(light1.position.x+5,light1.position.y-50, light1.position.z);
+light1.target.position.set(light1.position.x+5, light1.position.y-50, light1.position.z);
 scene.add(light1.target);
 scene.add(light1);
 
@@ -196,7 +209,7 @@ light2.position.x = 524;
 light2.position.y = -44;
 light2.position.z = -1;
 light2.target = new THREE.Object3D();
-light2.target.position.set(light2.position.x+7,light2.position.y-50, light2.position.z);
+light2.target.position.set(light2.position.x+7, light2.position.y-50, light2.position.z);
 scene.add(light2.target);
 scene.add(light2);
 
@@ -206,7 +219,7 @@ light3.position.x = 828;
 light3.position.y = 32;
 light3.position.z = -1;
 light3.target = new THREE.Object3D();
-light3.target.position.set(light3.position.x+9,light3.position.y-50, light3.position.z);
+light3.target.position.set(light3.position.x+9, light3.position.y-50, light3.position.z);
 scene.add(light3.target);
 scene.add(light3);
 
@@ -276,14 +289,19 @@ const animate = function () {
   }
 
   // SHOOTING STARS
-  if(Math.random() > .98){
-    let wish = shootingStar.create();
-    shootingStars.unshift(wish);
-    scene.add(wish.mesh);
+  if(Math.random() > .298){
+    let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
+    shootingStars.push(wish)
+    scene.add(wish.wish);
   }
-  shootingStars.forEach(wish => {
-    wish.update();
-  })
+  if(shootingStars.length){
+    shootingStars.forEach(wish => {
+      wish.update();
+    })
+  }
+
+  // console.log(shootingStars.length)
+  
   
   // SKY ROTATION
   stars.forEach(s => {
