@@ -38,7 +38,7 @@ function moveNest(e){
 
 // THE NEST
 const loader = new THREE.GLTFLoader();
-loader.load('../objects/theNest35.glb', (gltf) => {
+loader.load('../objects/theNest38.glb', (gltf) => {
   let nest = gltf.scene.children[0];
   nest.rotation.x = Math.PI/2;
   nest.scale.x = 32;
