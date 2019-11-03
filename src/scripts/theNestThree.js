@@ -1,15 +1,13 @@
 import {THREE} from '../vendor';
 // import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-import {GodRaysEffect, RenderPass, EffectPass, EffectComposer, Initializable} from 'postprocessing';
+import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
-import { NearestFilter } from 'three';
-
 
 const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(170,91,-20);
+const start = new THREE.Vector3(178,91,-20);
 const end = new THREE.Vector3(380,155,-20);
 const shootingStars = [];
 
@@ -18,7 +16,6 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
 
 camera.position.z = 570;
-camera.position.y = 0;
 camera.lookAt(0,0,0);
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
@@ -57,15 +54,13 @@ function init(){
     return mouseX, mouseY;
   }
 
-
-
   // ANWING BACKSPLASH PLANE
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
-  const backsplaceMat = new THREE.MeshPhongMaterial(0xffffff);
-  const backsplash = new THREE.Mesh(backsplashGeo,backsplaceMat);
+  const backsplachMat = new THREE.MeshPhongMaterial(0xffffff);
+  const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
   backsplash.scale.set(180,50,1);
   backsplash.rotation.z = Math.PI/10;
-  backsplash.position.set(270,120,-21);
+  backsplash.position.set(270,120,-11);
   scene.add(backsplash);
 
   // MOON
@@ -77,7 +72,7 @@ function init(){
 
   // AWNING LIGHT
   const moonGeo2 = new THREE.CircleGeometry(40,8);
-  const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777788});
+  const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
   awningLight.position.set(370,150,-20)
   scene.add(awningLight);
@@ -98,7 +93,7 @@ function init(){
     decay: .951,
     weight: .21,
     samples: 320,
-    blur: false
+    blur: true
   });
 
   let renderPass = new RenderPass(scene,camera);
@@ -233,13 +228,16 @@ function init(){
   const light = new THREE.AmbientLight(0xffeeee, .3);
   scene.add(light);
 
-  // DIRECTIONAL LIGHT
-  // const directional = new THREE.DirectionalLight(0xffffff,2);
-  // directional.position.set(200,0,300)
-  // directional.target = new THREE.Object3D();
-  // directional.target.position.set(-100,0,-10)
-  // scene.add(directional.target)
-  // scene.add(directional);
+  // GROUND LIGHT
+  const groundLight = new THREE.SpotLight(0xddddff);
+  groundLight.angle = Math.PI/5;
+  groundLight.penumbra = .1;
+  groundLight.decay = 2;
+  groundLight.position.set(width/2+40,-height/2+20,10)
+  groundLight.target = new THREE.Object3D();
+  groundLight.target.position.set(100,-300,-10)
+  scene.add(groundLight.target);
+  scene.add(groundLight);
 
   // HEADLIGHTS
   const headlight1 = new THREE.SpotLight(0xbbbbff,1.3);
@@ -268,6 +266,11 @@ function init(){
     requestAnimationFrame( animate );
     delta = 0.00011;
 
+    // CAMERA CONTROLS FOR DEVELOPMENT
+    // camera.position.x = THREE.Math.mapLinear(mouseX,-width/2,width/2,-1000,1000);
+    // camera.position.y = THREE.Math.mapLinear(mouseY,-height/2,height/2,-1000,1000);
+    // camera.lookAt(0,0,0)
+
     // LIGHT FLICKER
     pdelta += 0.07;
     p = noise(pdelta);
@@ -276,6 +279,7 @@ function init(){
     light1.intensity = THREE.Math.mapLinear(p,0,1,4.5,6);
     light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
     light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
+    groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.6,1.8);
 
     // HEADLIGHT MOUSE MOVEMENT
     headlight1.target.position.set(mouseX,mouseY,-10);
@@ -283,17 +287,22 @@ function init(){
 
     // MOONRISE
     const moonMaxHeight = 400;
-    moon.position.y += (moon.position.y >= moonMaxHeight) ? 0 : (moonMaxHeight-moon.position.y)*.0008;
-    console.log(moon.position.y)
+    moon.position.y += (moonMaxHeight-moon.position.y)*.0008;
+
+    // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
+    if(moon.position.y >= 198) backsplash.position.z = -21;
     
     // AWNING GODRAYS
-    lerper += .0009;
-    if(awningLight.position.x > end.x){
-      awningLight.position.set(170,91,-20);
-      lerper = 0;
-    } else {
-      awningLight.position.lerpVectors(start,end,lerper);
+    if(backsplash.position.z === -21){
+      lerper += .0009;
+      if(awningLight.position.x > end.x){
+        awningLight.position.set(170,91,-20);
+        lerper = 0;
+      } else {
+        awningLight.position.lerpVectors(start,end,lerper);
+      }
     }
+    
 
     // SHOOTING STARS
     if(Math.random() > .298){
