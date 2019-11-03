@@ -7,8 +7,8 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(178,91,-20);
-const end = new THREE.Vector3(380,155,-20);
+const start = new THREE.Vector3(150,75,-11);
+const end = new THREE.Vector3(400,169,-11);
 const shootingStars = [];
 
 const scene = new THREE.Scene();
@@ -58,9 +58,9 @@ function init(){
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
   const backsplachMat = new THREE.MeshPhongMaterial(0xffffff);
   const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
-  backsplash.scale.set(180,50,1);
+  backsplash.scale.set(180,40,1);
   backsplash.rotation.z = Math.PI/10;
-  backsplash.position.set(270,120,-11);
+  backsplash.position.set(270,122,-11);
   scene.add(backsplash);
 
   // MOON
@@ -71,10 +71,12 @@ function init(){
   scene.add(moon);
 
   // AWNING LIGHT
-  const moonGeo2 = new THREE.CircleGeometry(40,8);
+  const moonGeo2 = new THREE.PlaneBufferGeometry(1,1);
   const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
-  awningLight.position.set(370,150,-20)
+  awningLight.position.set(start.x,start.y,start.z);
+  awningLight.rotation.z = Math.PI/10;
+  awningLight.scale.set(130,35,1);
   scene.add(awningLight);
 
   // GODRAYS
@@ -117,7 +119,7 @@ function init(){
       let geometry = new THREE.PlaneBufferGeometry(1,1);
       let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
       obj.mesh = new THREE.Mesh(geometry,material);
-      obj.radius = Math.random() * (width/2 + 50);
+      obj.radius = Math.random() * (width/2 + 50) + 150;
       obj.scale = Math.random()*(2.6-.3) + .3;
       obj.theta = Math.random()*Math.PI*2;
       obj.mesh.position.x = Math.cos(obj.theta) * obj.radius;
@@ -168,8 +170,8 @@ function init(){
       obj.speed = Math.random()*14.2+11;
       obj.degree = Math.random()*3.5+.5;
       obj.size = Math.random()*1.3+.6;
-      obj.wish.position.x = width+20; 
-      obj.wish.position.y = Math.random()*(height+200)+(height*.7);
+      obj.wish.position.x = width+10; 
+      obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
       obj.wish.position.z = -29;
       for(let i = 1; i <= tailLength; i++){
         let tailDot = star.create(obj.size);
@@ -233,34 +235,38 @@ function init(){
   groundLight.angle = Math.PI/5;
   groundLight.penumbra = .1;
   groundLight.decay = 2;
-  groundLight.position.set(width/2+40,-height/2+20,10)
+  groundLight.position.set(width/2*1.05,-height/2*1.01,10)
   groundLight.target = new THREE.Object3D();
   groundLight.target.position.set(100,-300,-10)
   scene.add(groundLight.target);
   scene.add(groundLight);
 
   // HEADLIGHTS
-  const headlight1 = new THREE.SpotLight(0xbbbbff,1.3);
+  const headlight1 = new THREE.SpotLight(0xbbbbff,.3);
   headlight1.penumbra = .4;
   headlight1.angle = Math.PI/6;
   headlight1.position.set(0,-300,800);
   headlight1.target = new THREE.Object3D();
+  headlight1.target.position.z = -10;
   scene.add(headlight1.target);
   scene.add(headlight1);
 
-  const headlight2 = new THREE.SpotLight(0xbbbbff,1.3);
+  const headlight2 = new THREE.SpotLight(0xbbbbff,.3);
   headlight2.penumbra = .4;
   headlight2.angle = Math.PI/6;
   headlight2.position.set(600,-300,800);
   headlight2.target = new THREE.Object3D();
+  headlight2.target.position.z = -10;
   scene.add(headlight2.target);
   scene.add(headlight2);
 
   //=================== ANIMATION =====================//
   let delta = 0;
+  let theta = 0;
   let pdelta = 0;
   let p,q,r;
   let lerper = 0;
+  let radius;
 
   const animate = function () {
     requestAnimationFrame( animate );
@@ -279,33 +285,39 @@ function init(){
     light1.intensity = THREE.Math.mapLinear(p,0,1,4.5,6);
     light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
     light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
-    groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.6,1.8);
+    groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
 
-    // HEADLIGHT MOUSE MOVEMENT
-    headlight1.target.position.set(mouseX,mouseY,-10);
-    headlight2.target.position.set(mouseX+400,mouseY,-10);
+    // HEADLIGHT MOVEMENT
+    theta += 0.03;
+    radius = 70;
+    headlight1.target.position.x = (Math.cos(theta)*radius)-300;
+    headlight1.target.position.y = (Math.sin(theta)*radius*1.8);
+    headlight2.target.position.x = (Math.cos(theta)*radius);
+    headlight2.target.position.y = (Math.sin(theta)*radius)-400;
+    // Mouse controlled headlights
+    // headlight1.target.position.set(mouseX,mouseY,-10);
+    // headlight2.target.position.set(mouseX+400,mouseY,-10);
 
     // MOONRISE
     const moonMaxHeight = 400;
     moon.position.y += (moonMaxHeight-moon.position.y)*.0008;
 
     // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
-    if(moon.position.y >= 198) backsplash.position.z = -21;
+    if(moon.position.y >= 198) backsplash.position.z = -12;
     
     // AWNING GODRAYS
-    if(backsplash.position.z === -21){
+    if(backsplash.position.z === -12){
       lerper += .0009;
       if(awningLight.position.x > end.x){
-        awningLight.position.set(170,91,-20);
+        awningLight.position.set(170,91,-11);
         lerper = 0;
       } else {
         awningLight.position.lerpVectors(start,end,lerper);
       }
     }
-    
 
     // SHOOTING STARS
-    if(Math.random() > .298){
+    if(Math.random() > .98){
       let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
       shootingStars.push(wish)
       scene.add(wish.wish);
