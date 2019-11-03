@@ -309,9 +309,11 @@ function init(){
     if(backsplash.position.z === -12){
       lerper += .0009;
       if(awningLight.position.x > end.x){
+        awningLight.material.opacity = 0;
         awningLight.position.set(170,91,-11);
         lerper = 0;
       } else {
+        awningLight.material.opacity = 1;
         awningLight.position.lerpVectors(start,end,lerper);
       }
     }
