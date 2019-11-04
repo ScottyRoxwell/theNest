@@ -25,19 +25,33 @@ canvas.appendChild(renderer.domElement);
 
 // THE NEST
 const loader = new THREE.GLTFLoader();
-loader.load('../objects/theNest42.glb', (gltf) => {
-  let nest = gltf.scene.children[0];
+loader.load('../objects/theNest46.glb', (gltf) => {
+  let nest = gltf.scene.children[1];
   nest.rotation.x = Math.PI/2;
-  nest.scale.x = 32;
-  nest.scale.y = 32;
-  nest.scale.z = 32;
+  nest.scale.set(32,1,32);
   nest.position.y = -200;
   nest.position.z = -10;
+
+  // Masking Layer
+  let mask = gltf.scene.children[0];
+  let maskMap = mask.material.map;
+  mask.material = new THREE.MeshBasicMaterial({color:0x000000, alphaMap:maskMap});
+  mask.material.map = null;
+  mask.material.transparent = true;
+  mask.material.opacity = .9;
+  mask.material.depthWrite = false;
+  mask.rotation.x = Math.PI/2;
+  mask.position.y = -200;
+  mask.scale.set(32,1,32);
+
   // Tranparency settings for development
   // nest.material.transparent = true;
   // nest.material.opacity = .5;
+
+  // console.log(mask)
+  // console.log(nest)
+  // console.log(gltf.scene)
   scene.add(gltf.scene);
-  renderer.render(scene,camera);
   init();
 })
 
@@ -235,28 +249,30 @@ function init(){
   groundLight.angle = Math.PI/5;
   groundLight.penumbra = .1;
   groundLight.decay = 2;
-  groundLight.position.set(width/2*1.05,-height/2*1.01,10)
+  groundLight.position.set(width/2*1.05,-height/2*1.01,10);
   groundLight.target = new THREE.Object3D();
-  groundLight.target.position.set(100,-300,-10)
+  groundLight.target.position.set(100,-300,-10);
   scene.add(groundLight.target);
   scene.add(groundLight);
 
   // HEADLIGHTS
-  const headlight1 = new THREE.SpotLight(0xbbbbff,.3);
+  const headlight1 = new THREE.SpotLight(0xbbbbff,0);
   headlight1.penumbra = .4;
+  headlight1.decay = .001;
   headlight1.angle = Math.PI/6;
-  headlight1.position.set(0,-300,800);
+  headlight1.position.set(172,200,20);
   headlight1.target = new THREE.Object3D();
-  headlight1.target.position.z = -10;
+  headlight1.target.position.set(-60,80,-10);
   scene.add(headlight1.target);
   scene.add(headlight1);
 
-  const headlight2 = new THREE.SpotLight(0xbbbbff,.3);
-  headlight2.penumbra = .4;
-  headlight2.angle = Math.PI/6;
-  headlight2.position.set(600,-300,800);
+  const headlight2 = new THREE.SpotLight(0xbbbbff,2);
+  headlight2.penumbra = 1;
+  headlight2.decay = .1;
+  headlight2.angle = Math.PI/10;
+  headlight2.position.set(-120,160,500);
   headlight2.target = new THREE.Object3D();
-  headlight2.target.position.z = -10;
+  headlight2.target.position.set(-250,110,-10);
   scene.add(headlight2.target);
   scene.add(headlight2);
 
@@ -288,19 +304,24 @@ function init(){
     groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
 
     // HEADLIGHT MOVEMENT
-    theta += 0.03;
-    radius = 70;
-    headlight1.target.position.x = (Math.cos(theta)*radius)-300;
-    headlight1.target.position.y = (Math.sin(theta)*radius*1.8);
-    headlight2.target.position.x = (Math.cos(theta)*radius);
-    headlight2.target.position.y = (Math.sin(theta)*radius)-400;
+    // theta += 0.03;
+    // radius = 70;
+    // headlight1.target.position.x = (Math.cos(theta)*radius)-300;
+    // headlight1.target.position.y = (Math.sin(theta)*radius*1.8);
+    // headlight2.target.position.x = (Math.cos(theta)*radius);
+    // headlight2.target.position.y = (Math.sin(theta)*radius)-400;
     // Mouse controlled headlights
     // headlight1.target.position.set(mouseX,mouseY,-10);
-    // headlight2.target.position.set(mouseX+400,mouseY,-10);
+    headlight2.target.position.set(mouseX,mouseY,-10);
 
     // MOONRISE
     const moonMaxHeight = 400;
     moon.position.y += (moonMaxHeight-moon.position.y)*.0008;
+
+    // SANDS LIGHTING
+    if(moon.position.y > 230 && moon.position.y < 270){
+      headlight1.intensity = THREE.Math.mapLinear(moon.position.y,230,270,0,5);
+    }
 
     // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
     if(moon.position.y >= 198) backsplash.position.z = -12;
