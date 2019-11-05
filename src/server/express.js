@@ -1,5 +1,7 @@
 import express from "express";
 import path from "path";
+// import mask from "../scripts/theNestThree"
+
 
 const port = process.env.PORT || 3000;
 
@@ -20,6 +22,11 @@ server.set('views', path.join(__dirname, 'src/views'));
 server.set('view engine', 'pug');
 server.use(express.static('dist'));
 server.use(express.static('src'));
+
+// ROUTES
+// server.get('/', function(req,res){
+//   res.render('index')
+// })
 
 server.listen(port, () => {
   console.log("The server is up and running!");

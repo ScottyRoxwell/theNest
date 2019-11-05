@@ -23,9 +23,11 @@ renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
 
+let mask;
+
 // THE NEST
 const loader = new THREE.GLTFLoader();
-loader.load('../objects/theNest46.glb', (gltf) => {
+loader.load('../objects/theNest47.glb', (gltf) => {
   let nest = gltf.scene.children[1];
   nest.rotation.x = Math.PI/2;
   nest.scale.set(32,1,32);
@@ -33,12 +35,12 @@ loader.load('../objects/theNest46.glb', (gltf) => {
   nest.position.z = -10;
 
   // Masking Layer
-  let mask = gltf.scene.children[0];
+  mask = gltf.scene.children[0];
   let maskMap = mask.material.map;
   mask.material = new THREE.MeshBasicMaterial({color:0x000000, alphaMap:maskMap});
   mask.material.map = null;
   mask.material.transparent = true;
-  mask.material.opacity = .9;
+  // mask.material.opacity = .6;
   mask.material.depthWrite = false;
   mask.rotation.x = Math.PI/2;
   mask.position.y = -200;
@@ -48,9 +50,9 @@ loader.load('../objects/theNest46.glb', (gltf) => {
   // nest.material.transparent = true;
   // nest.material.opacity = .5;
 
-  // console.log(mask)
-  // console.log(nest)
-  // console.log(gltf.scene)
+  console.log(mask)
+  console.log(nest)
+  console.log(gltf.scene)
   scene.add(gltf.scene);
   init();
 })
@@ -67,6 +69,12 @@ function init(){
     mouseY = THREE.Math.mapLinear(e.clientY,0,height,height/2,-height/2);
     return mouseX, mouseY;
   }
+
+  document.body.addEventListener('keypress',(e)=>{
+    if(e.key === "s") mask.material.opacity += .1;
+    if(e.key === "d") mask.material.opacity -= .1;
+    // if(e.key === "f") camera.rotation.x += Math.PI;
+  });
 
   // ANWING BACKSPLASH PLANE
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
@@ -119,7 +127,7 @@ function init(){
 
   let composer = new EffectComposer(renderer);
   composer.addPass(renderPass);
-  composer.addPass(effectPass);
+  // composer.addPass(effectPass);
   composer.addPass(effectPass2);
 
   // STARS
@@ -183,7 +191,7 @@ function init(){
       obj.wish = new THREE.Group();
       obj.speed = Math.random()*14.2+11;
       obj.degree = Math.random()*3.5+.5;
-      obj.size = Math.random()*1.3+.6;
+      obj.size = Math.random()*1.3+.8;
       obj.wish.position.x = width+10; 
       obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
       obj.wish.position.z = -29;
@@ -270,19 +278,23 @@ function init(){
   headlight2.penumbra = 1;
   headlight2.decay = .1;
   headlight2.angle = Math.PI/10;
-  headlight2.position.set(-120,160,500);
+  headlight2.position.set(-120,160,570);
   headlight2.target = new THREE.Object3D();
   headlight2.target.position.set(-250,110,-10);
   scene.add(headlight2.target);
   scene.add(headlight2);
 
+  const floodLight = new THREE.SpotLight(0xffffff);
+  floodLight.position.set(0,0,570)
+  floodLight.target = new THREE.Object3D();
+  scene.add(floodLight.target);
+  // scene.add(floodLight);
+
   //=================== ANIMATION =====================//
   let delta = 0;
-  let theta = 0;
   let pdelta = 0;
   let p,q,r;
   let lerper = 0;
-  let radius;
 
   const animate = function () {
     requestAnimationFrame( animate );
@@ -304,12 +316,6 @@ function init(){
     groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
 
     // HEADLIGHT MOVEMENT
-    // theta += 0.03;
-    // radius = 70;
-    // headlight1.target.position.x = (Math.cos(theta)*radius)-300;
-    // headlight1.target.position.y = (Math.sin(theta)*radius*1.8);
-    // headlight2.target.position.x = (Math.cos(theta)*radius);
-    // headlight2.target.position.y = (Math.sin(theta)*radius)-400;
     // Mouse controlled headlights
     // headlight1.target.position.set(mouseX,mouseY,-10);
     headlight2.target.position.set(mouseX,mouseY,-10);
@@ -322,6 +328,9 @@ function init(){
     if(moon.position.y > 230 && moon.position.y < 270){
       headlight1.intensity = THREE.Math.mapLinear(moon.position.y,230,270,0,5);
     }
+
+    // mask.material.opacity = THREE.Math.mapLinear(mouseY,-height/2,height/2,0,1);
+    // console.log(mask.material.opacity);
 
     // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
     if(moon.position.y >= 198) backsplash.position.z = -12;
@@ -341,7 +350,7 @@ function init(){
 
     // SHOOTING STARS
     if(Math.random() > .98){
-      let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
+      let wish = shootingStar.create(Math.ceil(Math.random()*30+27));
       shootingStars.push(wish)
       scene.add(wish.wish);
     }
@@ -362,3 +371,5 @@ function init(){
 
   animate();
 }
+
+export {mask};
