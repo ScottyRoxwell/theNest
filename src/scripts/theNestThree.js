@@ -23,6 +23,8 @@ renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
 
+const items = document.querySelectorAll('li');
+
 // THE NEST
 const loader = new THREE.GLTFLoader();
 loader.load('../objects/theNest46.glb', (gltf) => {
@@ -57,15 +59,28 @@ loader.load('../objects/theNest46.glb', (gltf) => {
 
 function init(){
 
-  let mouseX;
-  let mouseY;
+  // ADD EVENT LISTENERS
+
+  let mouseX, mouseY, clientX, clientY;
 
   document.body.addEventListener('mousemove', moveNest);
 
   function moveNest(e){
     mouseX = THREE.Math.mapLinear(e.clientX,0,width,-width/2,width/2);
     mouseY = THREE.Math.mapLinear(e.clientY,0,height,height/2,-height/2);
-    return mouseX, mouseY;
+    clientX = e.clientX;
+    clientY = e.clientY;
+    return mouseX, mouseY, clientX, clientY;
+  }
+
+  window.addEventListener( 'resize', onWindowResize, false );
+
+  function onWindowResize(){
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    composer.setSize( window.innerWidth, window.innerHeight );
+    destroySky();
+    createSky(1400,window.innerWidth,window.innerHeight);
   }
 
   // ANWING BACKSPLASH PLANE
@@ -128,12 +143,12 @@ function init(){
     radius: null,
     theta: null,
 
-    create: function(){
+    create: function(w,h){
       let obj = Object.create(this);
       let geometry = new THREE.PlaneBufferGeometry(1,1);
       let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
       obj.mesh = new THREE.Mesh(geometry,material);
-      obj.radius = Math.random() * (width/2 + 50) + 150;
+      obj.radius = Math.random() * ((w>h)?w:h*1.25/2 + 50) + 150;
       obj.scale = Math.random()*(2.6-.3) + .3;
       obj.theta = Math.random()*Math.PI*2;
       obj.mesh.position.x = Math.cos(obj.theta) * obj.radius;
@@ -152,14 +167,20 @@ function init(){
 
   // STARRY SKY
   const stars = [];
-  function createSky(amount){
+  function createSky(amount,w,h){
     for(let i = 0; i < amount; i++){
-      let star = particle.create();
+      let star = particle.create(w,h);
       stars.push(star);
       scene.add(star.mesh);
     }
   }
-  createSky(1000);
+  createSky(1400,width,height);
+
+  function destroySky(){
+    stars.forEach(s=>{
+      scene.remove(s.mesh);
+    })
+  }
 
   // SHOOTING STARS
   const star = {
@@ -355,6 +376,27 @@ function init(){
     stars.forEach(s => {
       s.update(delta);
     });
+    
+    items.forEach((item,i)=>{
+      let radius = (Math.round(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
+      let cosX = (Math.round(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
+      let sinY = (Math.round(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
+      let radians = (Math.round((Math.atan2(sinY,cosX))*Math.pow(10,2)))/Math.pow(10,2);
+      let degrees = (Math.round((180/Math.PI * radians) * Math.pow(10,2)))/Math.pow(10,2);
+      if(i === 1) item.innerText = 'Width: ' + window.innerWidth;
+      if(i === 2) item.innerText = 'Height: ' + window.innerHeight;
+      if(i === 3) item.innerText = 'MouseX: ' + clientX;
+      if(i === 4) item.innerText = 'MouseY: ' + clientY;
+      if(i === 5) item.innerText = 'ThreeX: ' + mouseX;
+      if(i === 6) item.innerText = 'ThreeY: ' + mouseY;
+      if(i === 7) item.innerText = 'cosX: ' + cosX;
+      if(i === 8) item.innerText = 'sinY: ' + sinY;
+      if(i === 9) item.innerText = 'Radius: ' + radius;
+      if(i === 10) item.innerText = 'Radians: ' + radians;
+      if(i === 11) item.innerText = 'Degrees: ' + degrees;
+    })
+
+
 
     composer.render(0.1);
     // renderer.render( scene, camera );

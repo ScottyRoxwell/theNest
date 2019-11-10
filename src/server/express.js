@@ -10,16 +10,23 @@ const config = require('../../config/webpack.dev.js');
 const compiler = webpack(config);
 
 const webpackDevMiddleware = require("webpack-dev-middleware")(compiler,config.devServer)
-
 const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
 
 server.use(webpackDevMiddleware);
 server.use(webpackHotMiddleware);
 
-server.set('views', path.join(__dirname, 'src/views'));
-server.set('view engine', 'pug');
+// server.set('views', path.join(__dirname, '../../src/views'));
+// server.set('view engine', 'pug');
 server.use(express.static('dist'));
 server.use(express.static('src'));
+
+// server.get('/', (req,res)=>{
+//   res.render('index');
+// })
+
+// server.get('/about', (req,res)=>{
+//   res.render('about');
+// });
 
 server.listen(port, () => {
   console.log("The server is up and running!");
