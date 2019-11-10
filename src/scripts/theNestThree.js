@@ -2,6 +2,7 @@ import {THREE} from '../vendor';
 // import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
+import { SceneUtils } from 'three';
 
 const GLTFLoader = require('./gltfloader');
 
@@ -23,7 +24,14 @@ renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
 
+const theNestTitle = document.createElement('img');
+theNestTitle.src = '../images/theNestTitle3.png';
+
 const items = document.querySelectorAll('li');
+items.forEach((item,i)=>{
+  if(i === 0) item.appendChild(theNestTitle);
+})
+
 
 // THE NEST
 const loader = new THREE.GLTFLoader();
@@ -82,6 +90,19 @@ function init(){
     destroySky();
     createSky(1400,window.innerWidth,window.innerHeight);
   }
+
+  const menu = document.querySelector('ul');
+  let fullRad = true;
+  let fullDeg = true;
+
+  menu.addEventListener('click',(e)=>{
+    if(e.target.id === '10'){
+      fullRad = !fullRad;
+    }
+    if(e.target.id === '11'){
+      fullDeg = !fullDeg;
+    }
+  })
 
   // ANWING BACKSPLASH PLANE
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
@@ -202,7 +223,7 @@ function init(){
     create: function(tailLength){
       let obj = Object.create(this);
       obj.wish = new THREE.Group();
-      obj.speed = Math.random()*14.2+11;
+      obj.speed = Math.random()*12.2+11;
       obj.degree = Math.random()*3.5+.5;
       obj.size = Math.random()*1.3+.6;
       obj.wish.position.x = width+10; 
@@ -297,13 +318,33 @@ function init(){
   scene.add(headlight2.target);
   scene.add(headlight2);
 
+  // XMAS LIGHTS
+  const xmasLights = [];
+  (function(){
+    for(let i = 0; i < 9; i++){
+      let xmasLight = new THREE.PointLight(0xffffff,4,50);
+      if(i===0) xmasLight.position.set(230,-9,5);
+      if(i===1) xmasLight.position.set(304,12,5);
+      if(i===2) xmasLight.position.set(385,37,5);
+      if(i===3) xmasLight.position.set(472,64,5);
+      if(i===4) xmasLight.position.set(566,95,5);
+      if(i===5) xmasLight.position.set(159,-30,5);
+      if(i===6) xmasLight.position.set(94,-50,5);
+      if(i===7) xmasLight.position.set(93,-70,5);
+      if(i===8) xmasLight.position.set(191,-86,5);
+      xmasLights.push(xmasLight)
+      scene.add(xmasLight);
+    }
+    console.log(scene)
+  })();
+
+
   //=================== ANIMATION =====================//
   let delta = 0;
-  let theta = 0;
   let pdelta = 0;
-  let p,q,r;
+  let qdelta = 0;
+  let p,q,r,s;
   let lerper = 0;
-  let radius;
 
   const animate = function () {
     requestAnimationFrame( animate );
@@ -316,6 +357,8 @@ function init(){
 
     // LIGHT FLICKER
     pdelta += 0.07;
+    qdelta += 0.03;
+    s = noise(qdelta);
     p = noise(pdelta);
     q = noise(pdelta*.7);
     r = noise(pdelta*.5);
@@ -323,6 +366,10 @@ function init(){
     light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
     light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
     groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
+
+    xmasLights.forEach(light=>{
+      light.intensity = THREE.Math.mapLinear(s/2,0,1,2,6)
+    })
 
     // HEADLIGHT MOVEMENT
     // theta += 0.03;
@@ -377,12 +424,15 @@ function init(){
       s.update(delta);
     });
     
+    // UI //
     items.forEach((item,i)=>{
-      let radius = (Math.round(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
-      let cosX = (Math.round(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
-      let sinY = (Math.round(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
-      let radians = (Math.round((Math.atan2(sinY,cosX))*Math.pow(10,2)))/Math.pow(10,2);
-      let degrees = (Math.round((180/Math.PI * radians) * Math.pow(10,2)))/Math.pow(10,2);
+      let radius = (Math.floor(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
+      let cosX = (Math.floor(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
+      let sinY = (Math.floor(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
+      let radiansFull = Math.sign(Math.atan2(sinY,cosX)) === 1 ? Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2) : Math.floor((Math.PI*2 + (Math.atan2(sinY,cosX)))*Math.pow(10,2))/Math.pow(10,2);
+      let radiansHalf = Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2);
+      let degreesFull = Math.floor(180*radiansFull/Math.PI*Math.pow(10,2))/Math.pow(10,2);
+      let degreesHalf = Math.floor(180*radiansHalf/Math.PI*Math.pow(10,2))/Math.pow(10,2);
       if(i === 1) item.innerText = 'Width: ' + window.innerWidth;
       if(i === 2) item.innerText = 'Height: ' + window.innerHeight;
       if(i === 3) item.innerText = 'MouseX: ' + clientX;
@@ -392,11 +442,9 @@ function init(){
       if(i === 7) item.innerText = 'cosX: ' + cosX;
       if(i === 8) item.innerText = 'sinY: ' + sinY;
       if(i === 9) item.innerText = 'Radius: ' + radius;
-      if(i === 10) item.innerText = 'Radians: ' + radians;
-      if(i === 11) item.innerText = 'Degrees: ' + degrees;
+      if(i === 10) item.innerText = 'Radians: ' + ((fullRad) ? radiansFull : radiansHalf);
+      if(i === 11) item.innerText = 'Degrees: ' + ((fullDeg) ? degreesFull : degreesHalf);
     })
-
-
 
     composer.render(0.1);
     // renderer.render( scene, camera );

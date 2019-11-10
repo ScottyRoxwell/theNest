@@ -15,10 +15,19 @@ body
   position: absolute
   z-index: -1
 
-.stats
+.statsOuter
   position: absolute
   top: 20px
   left: 20px
+  padding: .5em
+  border: 1px solid #fff
+  border-radius: 31px
+  box-shadow: 0px 0px 5px #fff
+
+.statsOuter:hover
+  box-shadow: 0px 0px 8px #fff
+
+.stats
   width: auto
   opacity: .8
   border: 5px solid white
@@ -32,11 +41,11 @@ body
   background: -webkit-linear-gradient(top left, #000000, rgba(255,255,255,.3));
   background: -moz-linear-gradient(top left, #000000, rgba(255,255,255,.3));
   background: linear-gradient(to bottom right, #000000, rgba(255,255,255,.3));
-  background
-
+  transition: background 12s
   li
     text-shadow: 0px 0px 12px #fff
     font-family: 'Unica One', cursive;
+    cursor: default
   li:first-child
     font-size: 1.7em
     font-family: 'Lobster', cursive;
@@ -45,7 +54,14 @@ body
     img
       width: 240px
       margin: 0 auto
+  li:nth-child(n+11)
+    cursor: pointer
   
+.stats:hover
+    background: -webkit-linear-gradient(top left, #000000, rgba(255,255,255,.4));
+    background: -moz-linear-gradient(top left, #000000, rgba(255,255,255,.4));
+    background: linear-gradient(to bottom right, #000000, rgba(255,255,255,.4));
+
 .main
   width: 100%
   height: 100%

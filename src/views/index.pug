@@ -1,21 +1,12 @@
 extends layout
 
 block content
-  .stats
-    ul
-      li
-        img(src="../images/TheNestTitle3.png")
-      li
-      li
-      li
-      li
-      li
-      li
-      li
-      li
-      li
-      li
-      li
+  .statsOuter
+    .stats
+      - var n = 0
+      ul
+        while n < 12
+          li(id=n++)
 
   #canvas
   //- .main
