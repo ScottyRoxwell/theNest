@@ -87,8 +87,7 @@ function init(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     composer.setSize( window.innerWidth, window.innerHeight );
-    destroySky();
-    createSky(1400,window.innerWidth,window.innerHeight);
+    starrySky.redraw(window.innerWidth, window.innerHeight);
   }
 
   const menu = document.querySelector('ul');
@@ -159,49 +158,59 @@ function init(){
   composer.addPass(effectPass2);
 
   // STARS
-  const particle = {
-    scale: 1,
-    radius: null,
-    theta: null,
+  const sky = {
+    theta: 0,
+    amount: 0,
 
-    create: function(w,h){
+    create: function(amount,w,h){
       let obj = Object.create(this);
-      let geometry = new THREE.PlaneBufferGeometry(1,1);
-      let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      obj.mesh = new THREE.Mesh(geometry,material);
-      obj.radius = Math.random() * ((w>h)?w:h*1.25/2 + 50) + 150;
-      obj.scale = Math.random()*(2.6-.3) + .3;
-      obj.theta = Math.random()*Math.PI*2;
-      obj.mesh.position.x = Math.cos(obj.theta) * obj.radius;
-      obj.mesh.position.y = Math.sin(obj.theta) * obj.radius;
-      obj.mesh.position.z = -30;
-      obj.mesh.scale.x = obj.scale;
-      obj.mesh.scale.y = obj.scale;
+      obj.amount = amount;
+      let geometry = new THREE.Geometry(1,1);
+      for(let i = 0; i < amount; i++){
+        let randomTheta = -Math.sqrt(Math.random())*Math.PI*2;
+        let randomRadius = Math.random() * ((w>h)?w*1.25:h*1.25) + 150;
+        let particle = new THREE.Vector3(
+          Math.cos(randomTheta)*randomRadius,
+          Math.sin(randomTheta)*randomRadius,
+          Math.random() < .95 ? (Math.random()*20) -400 : Math.random()*-5
+        );
+        geometry.vertices.push(particle)
+      }
+      let material = new THREE.PointsMaterial({ color: 0xffffff });
+      material.size = 3;
+      obj.mesh = new THREE.Points(geometry,material);
+      obj.mesh.position.z = -30
+      scene.add(obj.mesh);
       return obj;
     },
     update: function(delta){
       this.theta += delta;
-      this.mesh.position.x = Math.cos(this.theta) * this.radius;
-      this.mesh.position.y = Math.sin(this.theta) * this.radius;
+      this.mesh.rotation.z = this.theta;
+    },
+    redraw: function(w,h){
+      scene.remove(this.mesh);
+      let geometry = new THREE.Geometry(1,1);
+      for(let i = 0; i < this.amount; i++){
+        let randomTheta = -Math.sqrt(Math.random())*Math.PI*2;
+        let randomRadius = Math.random() * ((w>h)?w*1.25:h*1.25) + 150;
+        let particle = new THREE.Vector3(
+          Math.cos(randomTheta)*randomRadius,
+          Math.sin(randomTheta)*randomRadius,
+          Math.random() < .95 ? (Math.random()*20) -400 : (Math.random()*-5)-31
+        );
+        geometry.vertices.push(particle)
+      }
+      let material = new THREE.PointsMaterial({ color: 0xffffff });
+      material.size = 2.5;
+      this.mesh = new THREE.Points(geometry,material);
+      this.mesh.position.z = -30
+      scene.add(this.mesh);
     }
+
   }
 
   // STARRY SKY
-  const stars = [];
-  function createSky(amount,w,h){
-    for(let i = 0; i < amount; i++){
-      let star = particle.create(w,h);
-      stars.push(star);
-      scene.add(star.mesh);
-    }
-  }
-  createSky(1400,width,height);
-
-  function destroySky(){
-    stars.forEach(s=>{
-      scene.remove(s.mesh);
-    })
-  }
+  let starrySky = sky.create(1400,width,height);
 
   // SHOOTING STARS
   const star = {
@@ -420,9 +429,7 @@ function init(){
     }
     
     // SKY ROTATION
-    stars.forEach(s => {
-      s.update(delta);
-    });
+    starrySky.update(delta);
     
     // UI //
     items.forEach((item,i)=>{
