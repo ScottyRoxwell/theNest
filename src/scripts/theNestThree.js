@@ -32,40 +32,53 @@ items.forEach((item,i)=>{
   if(i === 0) item.appendChild(theNestTitle);
 })
 
+const introDiv = document.getElementById('introDiv');
 
-// THE NEST
-const loader = new THREE.GLTFLoader();
-loader.load('../objects/theNest46.glb', (gltf) => {
-  let nest = gltf.scene.children[1];
-  nest.rotation.x = Math.PI/2;
-  nest.scale.set(32,1,32);
-  nest.position.y = -200;
-  nest.position.z = -10;
-
-  // Masking Layer
-  let mask = gltf.scene.children[0];
-  let maskMap = mask.material.map;
-  mask.material = new THREE.MeshBasicMaterial({color:0x000000, alphaMap:maskMap});
-  mask.material.map = null;
-  mask.material.transparent = true;
-  mask.material.opacity = .9;
-  mask.material.depthWrite = false;
-  mask.rotation.x = Math.PI/2;
-  mask.position.y = -200;
-  mask.scale.set(32,1,32);
-
-  // Tranparency settings for development
-  // nest.material.transparent = true;
-  // nest.material.opacity = .5;
-
-  // console.log(mask)
-  // console.log(nest)
-  // console.log(gltf.scene)
-  scene.add(gltf.scene);
+setTimeout(()=>{
   init();
-})
+},3100);
+
+setTimeout(()=>{
+  introDiv.remove();
+},6000);
 
 function init(){
+  // THE NEST
+  const loader = new THREE.GLTFLoader();
+  loader.load('../objects/theNest46.glb', (gltf) => {
+    let nest = gltf.scene.children[1];
+    nest.rotation.x = Math.PI/2;
+    nest.scale.set(32,1,32);
+    nest.position.y = -200;
+    nest.position.z = -10;
+
+    // Masking Layer
+    let mask = gltf.scene.children[0];
+    let maskMap = mask.material.map;
+    mask.material = new THREE.MeshBasicMaterial({color:0x000000, alphaMap:maskMap});
+    mask.material.map = null;
+    mask.material.transparent = true;
+    mask.material.opacity = .9;
+    mask.material.depthWrite = false;
+    mask.rotation.x = Math.PI/2;
+    mask.position.y = -200;
+    mask.scale.set(32,1,32);
+
+    // Tranparency settings for development
+    // nest.material.transparent = true;
+    // nest.material.opacity = .5;
+
+    // console.log(mask)
+    // console.log(nest)
+    // console.log(gltf.scene)
+    scene.add(gltf.scene);
+    loadProgram();
+  })
+}
+
+
+
+function loadProgram(){
 
   // ADD EVENT LISTENERS
 
@@ -87,7 +100,11 @@ function init(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     composer.setSize( window.innerWidth, window.innerHeight );
-    starrySky.redraw(window.innerWidth, window.innerHeight);
+    starrySky.redraw( window.innerWidth, window.innerHeight );
+  }
+
+  function onMouseMove(e){
+
   }
 
   const menu = document.querySelector('ul');
@@ -167,8 +184,8 @@ function init(){
       obj.amount = amount;
       let geometry = new THREE.Geometry(1,1);
       for(let i = 0; i < amount; i++){
-        let randomTheta = -Math.sqrt(Math.random())*Math.PI*2;
-        let randomRadius = Math.random() * ((w>h)?w*1.25:h*1.25) + 150;
+        let randomTheta = Math.random()*Math.PI*2;
+        let randomRadius = Math.random() * ((w>h)?w*1.45:h*1.45) + 150;
         let particle = new THREE.Vector3(
           Math.cos(randomTheta)*randomRadius,
           Math.sin(randomTheta)*randomRadius,
@@ -192,7 +209,7 @@ function init(){
       let geometry = new THREE.Geometry(1,1);
       for(let i = 0; i < this.amount; i++){
         let randomTheta = -Math.sqrt(Math.random())*Math.PI*2;
-        let randomRadius = Math.random() * ((w>h)?w*1.25:h*1.25) + 150;
+        let randomRadius = Math.random() * ((w>h)?w*1.45:h*1.5) + 150;
         let particle = new THREE.Vector3(
           Math.cos(randomTheta)*randomRadius,
           Math.sin(randomTheta)*randomRadius,
@@ -234,7 +251,7 @@ function init(){
       obj.wish = new THREE.Group();
       obj.speed = Math.random()*12.2+11;
       obj.degree = Math.random()*3.5+.5;
-      obj.size = Math.random()*1.3+.6;
+      obj.size = Math.random()*1.1+.6;
       obj.wish.position.x = width+10; 
       obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
       obj.wish.position.z = -29;
@@ -325,7 +342,9 @@ function init(){
   headlight2.target = new THREE.Object3D();
   headlight2.target.position.set(-250,110,-10);
   scene.add(headlight2.target);
-  scene.add(headlight2);
+  // scene.add(headlight2);
+
+
 
   // XMAS LIGHTS
   const xmasLights = [];
@@ -341,24 +360,26 @@ function init(){
       if(i===6) xmasLight.position.set(94,-50,5);
       if(i===7) xmasLight.position.set(93,-70,5);
       if(i===8) xmasLight.position.set(191,-86,5);
+
       xmasLights.push(xmasLight)
       scene.add(xmasLight);
-    }
-    console.log(scene)
-  })();
 
+    }
+  })();
 
   //=================== ANIMATION =====================//
   let delta = 0;
+  let ddelta = 0;
   let pdelta = 0;
   let qdelta = 0;
   let p,q,r,s;
   let lerper = 0;
+  let mouse = new THREE.Vector3(mouseX,mouseY,0)
 
   const animate = function () {
     requestAnimationFrame( animate );
     delta = 0.00011;
-
+    ddelta += 2;
     // CAMERA CONTROLS FOR DEVELOPMENT
     // camera.position.x = THREE.Math.mapLinear(mouseX,-width/2,width/2,-1000,1000);
     // camera.position.y = THREE.Math.mapLinear(mouseY,-height/2,height/2,-1000,1000);
@@ -380,6 +401,19 @@ function init(){
       light.intensity = THREE.Math.mapLinear(s/2,0,1,2,6)
     })
 
+    // Make mouse light up lights
+    mouse.x = mouseX;
+    mouse.y = mouseY;
+
+    xmasLights.forEach(light=>{
+    if(light.position.distanceTo(mouse)< 100){
+      let distance = light.position.distanceTo(mouse);
+      let defaultIntesity = light.intensity;
+      light.intensity = THREE.Math.mapLinear(distance,0,100,10,defaultIntesity);
+    }
+    if(ddelta % 4 === 0) light.intensity = 0.5;
+  })
+
     // HEADLIGHT MOVEMENT
     // theta += 0.03;
     // radius = 70;
@@ -389,7 +423,7 @@ function init(){
     // headlight2.target.position.y = (Math.sin(theta)*radius)-400;
     // Mouse controlled headlights
     // headlight1.target.position.set(mouseX,mouseY,-10);
-    headlight2.target.position.set(mouseX,mouseY,-10);
+    // headlight2.target.position.set(mouseX,mouseY,-10);
 
     // MOONRISE
     const moonMaxHeight = 400;

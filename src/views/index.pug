@@ -1,14 +1,19 @@
 extends layout
 
 block content
-  .statsOuter
-    .stats
-      - var n = 0
-      ul
-        while n < 12
-          li(id=n++)
-
-  #canvas
+  
+  #introDiv
+    h1#welcome Welcome 
+    h1#to to
+    img(src="../../src/images/TheNestTitle3.png")
+  .landing  
+    .statsOuter
+      .stats
+        - var n = 0
+        ul
+          while n < 12
+            li(id=n++)
+    #canvas
   //- .main
   //-   h1=yummy
   
