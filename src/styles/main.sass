@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i|Orbitron&display=swap')
 @import url('https://fonts.googleapis.com/css?family=Lobster&display=swap')
 @import url('https://fonts.googleapis.com/css?family=Unica+One&display=swap')
-
+@import url('https://fonts.googleapis.com/css?family=Great+Vibes&display=swap')
 body
   margin: 0px
   background-color: black
@@ -11,22 +11,30 @@ body
   font-family: 'Unica One'
 
 #introDiv
+  display: grid
+  grid-template-columns: 4fr 5fr
   width: 100%
   height: 100vh
   position: absolute
   z-index: 1
-  background-color: black
-  display: flex
+  background-color: rgba(0,0,0,0);
   opacity: 1
-  flex-direction: column
-  align-items: center 
-  animation: fadeOut 2s ease-in-out 4s 
-  animation-fill-mode: forwards
+  
+.intro
+  width: 100%
+  max-height: 0vh
+  background-color: black
+  opacity: .7
+  color: white
+  transition: max-height .3s ease-in-out 
+.active
+  max-height: 100vh
+
   img
     display: block
     margin: 0 auto
     position: absolute
-    top: 40vh
+    top: 35vh
     width: 50%
     opacity: 0
     animation: 
@@ -39,9 +47,8 @@ body
     display: block
     font-size: 10em
     color: #ffffff
-    position: absolute
     top: 40vh
-    opacity: 0
+    opacity: 1
     text-shadow: 0px 0px 12px #fff
   #welcome
     animation: 
@@ -74,9 +81,9 @@ body
 
 .landing
   position: absolute
-  opacity: 0
-  animation: fadeIn 2s ease-in-out 4s 
-  animation-fill-mode: forwards
+  opacity: 1
+  // animation: fadeIn 2s ease-in-out 4s 
+  // animation-fill-mode: forwards
 
 #canvas
   width: 100%
@@ -128,7 +135,7 @@ body
     text-shadow: 0px 0px 12px #fff
     font-family: 'Unica One', cursive;
     cursor: default
-  li:first-child
+  &:first-child
     font-size: 1.7em
     font-family: 'Lobster', cursive;
     line-height: 1.5em
@@ -136,13 +143,79 @@ body
     img
       width: 240px
       margin: 0 auto
-  li:nth-child(n+11)
+  &:nth-child(n+11)
     cursor: pointer
   
 .stats:hover
     background: -webkit-linear-gradient(top left, #000000, rgba(255,255,255,.4));
     background: -moz-linear-gradient(top left, #000000, rgba(255,255,255,.4));
     background: linear-gradient(to bottom right, #000000, rgba(255,255,255,.4));
+
+.backSplash
+  position: absolute
+  z-index: 0
+  background: -webkit-linear-gradient(left, rgba(0,0,0,.5), rgba(255,255,255,.01));
+  background: -moz-linear-gradient(left, rgba(0,0,0,.5), rgba(255,255,255,.01));
+  background: linear-gradient(right, rgba(0,0,0,.5), rgba(255,255,255,.01));
+  color: white
+  top: 5vh
+  left: 10vh
+  height: auto
+  border-radius: 30px
+  box-shadow: -8px 0px 20px
+  animation:
+    name: grow
+    duration: .2s
+    timing-function: ease-in-out
+    delay: 1s
+    fill-mode: forwards
+  
+
+.innerContainer
+  border: 1px solid #ccc
+  border-radius: 18px
+  margin: 15px
+  display: grid
+  grid-template-columns: 20px 4fr 10px 5fr 20px
+  height: 85vh
+  opacity: 1
+  // animation:
+  //   name: fadeIn
+  //     duration: .4s
+  //     delay: 1.2s
+  //     fill-mode: forwards
+  img
+    display: block
+    opacity: 0
+    padding: 0
+    animation: 
+      name: fadeInPic
+      duration: .4s
+      delay: 1.2s
+      fill-mode: forwards
+  #menuPic
+    width: 100%
+    border-radius: 5px
+    box-shadow: -4px 4px 2px 0 #333
+    border: 1px solid #ccc
+    margin: 15px auto
+  #nestTitle
+    width : 100%
+    padding: 15px 0 0 0
+    margin: 0 auto
+      
+
+@keyframes fadeInPic
+  0%
+    opacity: 0
+  100%
+    opacity: .9
+
+@keyframes grow
+  0%
+    width: 0vw
+  100%
+    width: 40vw
 
 .main
   width: 100%
@@ -161,3 +234,47 @@ body
     border-color: black
     padding: 1.8rem 1.3rem
 
+.menu
+  display: flex
+  flex-direction: column
+  align-content: space-between
+  height: 100%
+  &>li
+    font-size: 3em
+    &:nth-child(2)
+      text-align: center
+      font-family: 'Great Vibes', cursive;
+      font-size: 3em
+    &:nth-child(3)
+      text-align: center
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.3em
+      padding: 0 0 10px 0
+      line-height: 1em
+  a:hover
+    text-shadow: 0 0 15px rgba(255,255,255,.9)
+  a
+    text-decoration: none
+    color: white
+
+.socialMedia
+  display: flex
+  flex-direction: row
+  li
+    font-size: .5em
+    width: auto
+    img
+      width: 55%
+    &:nth-child(2)
+      img
+        width: 68%
+
+    // #ig
+    //   width: 25%
+
+//-------------- MEDIA QUERIES -------------//
+
+// @media (max-width: 375px)
+//   #canvas
+//     left: -200px
+  

@@ -1,7 +1,24 @@
 import {THREE} from '../vendor';
 import { TriangleFanDrawMode } from 'three';
-//fire off "Welcome to The Nest"
-let welcome = document.querySelector('h1');
+
+const left = document.getElementById('leftIntro');
+const right = document.getElementById('rightIntro');
+const container = document.getElementById('introDiv');
+
+container.addEventListener('click',(e)=>{
+  if(e.clientX < window.innerWidth/2){
+    if(!left.classList.contains('active')) left.classList.add('active');
+    else left.classList.remove('active');
+  } else {
+    if(!right.classList.contains('active')) right.classList.add('active');
+    else right.classList.remove('active');
+  }
+  console.log(right.classList)
+
+  
+})
+
+
 const NF = 80;
 let rID = null, f = 0, dir = -1;
 

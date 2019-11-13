@@ -17,7 +17,22 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
 
 camera.position.z = 570;
-camera.lookAt(0,0,0);
+function cameraControls(w,h){
+  if(w <= 476){
+    camera.position.x = 160;
+    camera.lookAt(160,0,0);
+  } else if(w <= 568){
+    camera.position.x = 125;
+    camera.lookAt(125,0,0);
+  } else if(w <= 800){
+    camera.position.x = 135;
+    camera.lookAt(135,0,0);
+  } else {
+    camera.position.x = 0;
+    camera.lookAt(0,0,0);
+  }
+}
+cameraControls(width);
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(width,height);
@@ -26,21 +41,24 @@ canvas.appendChild(renderer.domElement);
 
 const theNestTitle = document.createElement('img');
 theNestTitle.src = '../images/theNestTitle3.png';
+theNestTitle.id = 'nestTitle';
 
 const items = document.querySelectorAll('li');
-items.forEach((item,i)=>{
-  if(i === 0) item.appendChild(theNestTitle);
-})
+const title = document.getElementById('title');
+title.appendChild(theNestTitle);
 
 const introDiv = document.getElementById('introDiv');
+console.log(width)
 
-setTimeout(()=>{
-  init();
-},3100);
+// setTimeout(()=>{
+//   init();
+// },3100);
 
-setTimeout(()=>{
-  introDiv.remove();
-},6000);
+// setTimeout(()=>{
+//   introDiv.remove();
+// },6000);
+
+init()
 
 function init(){
   // THE NEST
@@ -94,31 +112,59 @@ function loadProgram(){
     return mouseX, mouseY, clientX, clientY;
   }
 
+  // On Window Resize
   window.addEventListener( 'resize', onWindowResize, false );
 
   function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    cameraControls(window.innerWidth,window.innerHeight);
     composer.setSize( window.innerWidth, window.innerHeight );
     starrySky.redraw( window.innerWidth, window.innerHeight );
   }
 
-  function onMouseMove(e){
+  // Inspector UI Controls
+  // const menu = document.querySelector('ul');
+  // let fullRad = true;
+  // let fullDeg = true;
 
-  }
+  // menu.addEventListener('click',(e)=>{
+  //   if(e.target.id === '10'){
+  //     fullRad = !fullRad;
+  //   }
+  //   if(e.target.id === '11'){
+  //     fullDeg = !fullDeg;
+  //   }
+  // })
 
-  const menu = document.querySelector('ul');
-  let fullRad = true;
-  let fullDeg = true;
+  // UNIVERSE CURTAIN
+  const curtainShape = new THREE.Shape()
+  curtainShape.moveTo(-2000,500)
+  curtainShape.lineTo(2000,500)
+  curtainShape.lineTo(2000,-500)
+  curtainShape.lineTo(-2000,-500)
+  curtainShape.lineTo(-2000,500);
 
-  menu.addEventListener('click',(e)=>{
-    if(e.target.id === '10'){
-      fullRad = !fullRad;
-    }
-    if(e.target.id === '11'){
-      fullDeg = !fullDeg;
-    }
-  })
+  const curtainHole = new THREE.Path()
+  curtainHole.moveTo(-848,495)
+  curtainHole.lineTo(855,495)
+  curtainHole.lineTo(855,-495)
+  curtainHole.lineTo(-848,-495)
+  curtainHole.lineTo(-848,495);
+
+  curtainShape.holes.push(curtainHole);
+  const curtainGeo = new THREE.ShapeGeometry(curtainShape);
+  const curtainMat = new THREE.MeshBasicMaterial({color:0x0b0202});
+  const curtain = new THREE.Mesh(curtainGeo,curtainMat);
+  scene.add(curtain);
+
+  // const testPlaneGeo = new THREE.PlaneBufferGeometry(1,1)
+  // const testPlaneMat = new THREE.MeshBasicMaterial({color:0xff0000})
+  // const testPlane = new THREE.Mesh(testPlaneGeo,testPlaneMat);
+  // testPlane.scale.set(40,40,1)
+  // testPlane.position.z = -10
+  // testPlane.scale.set(869*2,490*2,1)
+  // scene.add(testPlane)
 
   // ANWING BACKSPLASH PLANE
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
@@ -466,26 +512,34 @@ function loadProgram(){
     starrySky.update(delta);
     
     // UI //
-    items.forEach((item,i)=>{
-      let radius = (Math.floor(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
-      let cosX = (Math.floor(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
-      let sinY = (Math.floor(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
-      let radiansFull = Math.sign(Math.atan2(sinY,cosX)) === 1 ? Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2) : Math.floor((Math.PI*2 + (Math.atan2(sinY,cosX)))*Math.pow(10,2))/Math.pow(10,2);
-      let radiansHalf = Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2);
-      let degreesFull = Math.floor(180*radiansFull/Math.PI*Math.pow(10,2))/Math.pow(10,2);
-      let degreesHalf = Math.floor(180*radiansHalf/Math.PI*Math.pow(10,2))/Math.pow(10,2);
-      if(i === 1) item.innerText = 'Width: ' + window.innerWidth;
-      if(i === 2) item.innerText = 'Height: ' + window.innerHeight;
-      if(i === 3) item.innerText = 'MouseX: ' + clientX;
-      if(i === 4) item.innerText = 'MouseY: ' + clientY;
-      if(i === 5) item.innerText = 'ThreeX: ' + mouseX;
-      if(i === 6) item.innerText = 'ThreeY: ' + mouseY;
-      if(i === 7) item.innerText = 'cosX: ' + cosX;
-      if(i === 8) item.innerText = 'sinY: ' + sinY;
-      if(i === 9) item.innerText = 'Radius: ' + radius;
-      if(i === 10) item.innerText = 'Radians: ' + ((fullRad) ? radiansFull : radiansHalf);
-      if(i === 11) item.innerText = 'Degrees: ' + ((fullDeg) ? degreesFull : degreesHalf);
-    })
+    // items.forEach((item,i)=>{
+    //   let radius = (Math.floor(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
+    //   let cosX = (Math.floor(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
+    //   let sinY = (Math.floor(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
+    //   let radiansFull = Math.sign(Math.atan2(sinY,cosX)) === 1 ? Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2) : Math.floor((Math.PI*2 + (Math.atan2(sinY,cosX)))*Math.pow(10,2))/Math.pow(10,2);
+    //   let radiansHalf = Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2);
+    //   let degreesFull = Math.floor(180*radiansFull/Math.PI*Math.pow(10,2))/Math.pow(10,2);
+    //   let degreesHalf = Math.floor(180*radiansHalf/Math.PI*Math.pow(10,2))/Math.pow(10,2);
+    //   if(i === 1) item.innerText = 'Width: ' + window.innerWidth;
+    //   if(i === 2) item.innerText = 'Height: ' + window.innerHeight;
+    //   if(i === 3) item.innerText = 'MouseX: ' + clientX;
+    //   if(i === 4) item.innerText = 'MouseY: ' + clientY;
+    //   if(i === 5) item.innerText = 'ThreeX: ' + mouseX;
+    //   if(i === 6) item.innerText = 'ThreeY: ' + mouseY;
+    //   if(i === 7) item.innerText = 'cosX: ' + cosX;
+    //   if(i === 8) item.innerText = 'sinY: ' + sinY;
+    //   if(i === 9) item.innerText = 'Radius: ' + radius;
+    //   if(i === 10) item.innerText = 'Radians: ' + ((fullRad) ? radiansFull : radiansHalf);
+    //   if(i === 11) item.innerText = 'Degrees: ' + ((fullDeg) ? degreesFull : degreesHalf);
+    // })
+
+    // items.forEach((item,i)=>{
+    //   if(i === 11) item.innerText = mouseX;
+    //   if(i === 12) item.innerText = mouseY;
+    // })
+
+    // testPlane.scale.x = THREE.Math.mapLinear(Math.abs(mouseX),0,width/2,0,width)
+    // testPlane.scale.y = THREE.Math.mapLinear(Math.abs(mouseY),0,height/2,0,height)
 
     composer.render(0.1);
     // renderer.render( scene, camera );

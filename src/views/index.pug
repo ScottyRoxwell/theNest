@@ -3,16 +3,57 @@ extends layout
 block content
   
   #introDiv
-    h1#welcome Welcome 
-    h1#to to
-    img(src="../../src/images/TheNestTitle3.png")
+    #leftIntro.intro
+      h1 Beans
+    #rightIntro.intro
+      h1 Cookinz
   .landing  
-    .statsOuter
-      .stats
-        - var n = 0
-        ul
-          while n < 12
-            li(id=n++)
+    //- .statsOuter
+    //-   .stats
+    //-     - var n = 0
+    //-     ul
+    //-       while n < 12
+    //-         li(id=n++)
+    .backSplash
+      .innerContainer
+        .margin
+        .left
+          ul.menu
+            //- - var n = 0
+            //- while n < 12
+            //-   li(id=n++)
+            li#title
+            li
+              hr
+            li Indian Wells
+            li 
+              a(href='#') Home
+            li
+              a(href='#') Menu
+            li
+              a(href='#') Entertainment
+            li
+              a(href='#') Location
+            li
+              a(href='#') Banquets
+            li
+              a(href='#') Shop
+            li
+              a(href='#') Contact
+            li
+            li
+            li
+              ul.socialMedia
+                li
+                  a
+                    img(src="../../src/images/fb.png")
+                li
+                  a 
+                    img(src="../../src/images/ig.png")
+        .gutter
+        .right
+          img#menuPic(src="../../src/images/dodiKevin.jpg")
+        .margin
     #canvas
   //- .main
   //-   h1=yummy
