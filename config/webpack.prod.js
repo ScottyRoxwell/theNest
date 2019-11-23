@@ -29,7 +29,8 @@ module.exports = merge(common, {
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: "[name].[contentHash].css" }),
-    new CleanWebpackPlugin()
+    new CleanWebpackPlugin(),
+    // new CopyPlugin([{from: '../src/objects', to: '/dist/objects/', toType: 'dir'}])
   ],
   module: {
     rules: [

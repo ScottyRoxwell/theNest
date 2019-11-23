@@ -7,12 +7,12 @@
 body
   margin: 0px
   background-color: black
-  // overflow-x: hidden
+  overflow: hidden
   font-family: 'Unica One'
 
 #introDiv
   display: grid
-  grid-template-columns: 4fr 5fr
+  grid-template-columns: .9fr 8fr 10fr .9fr
   width: 100%
   height: 100vh
   position: absolute
@@ -21,46 +21,69 @@ body
   opacity: 1
   
 .intro
-  width: 100%
+  background: -webkit-linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.2));
+  background: -moz-linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.2));
+  background: linear-gradient(right, rgba(0,0,0,.7), rgba(0,0,0,.2));
+  max-width: 100%
   max-height: 0vh
-  background-color: black
-  opacity: .7
   color: white
-  transition: max-height .3s ease-in-out 
-.active
-  max-height: 100vh
-
+  transition: max-height .5s ease-in-out
   img
     display: block
     margin: 0 auto
-    position: absolute
-    top: 35vh
-    width: 50%
-    opacity: 0
-    animation: 
-      name: pulse2
-      delay: 3.6s
-      duration: 5.5s
-  h1
     text-align: center
     margin: 0 auto
     display: block
     font-size: 10em
     color: #ffffff
     top: 40vh
-    opacity: 1
     text-shadow: 0px 0px 12px #fff
-  #welcome
-    animation: 
-      name: pulse
-      delay: 1s
-      duration: 2s
-  #to
-    animation: 
-      name: pulse
-      delay: 2.3s
-      duration: 2s
+
+.active
+  max-height: 100vh
+
+.left
+  perspective: 1000px
+  opacity: .7
+  li
+    transform-origin: -40px 0 500px
+
+.menuOn
+  li
+    @for $i from 1 through 11
+        &:nth-child(#{$i})
+          animation:
+            name: menuOn
+            duration: 160ms *$i
+            timing-function: ease-in-out
+            fill-mode: forwards
   
+.menuOff
+  li
+    @for $i from 1 through 11
+        &:nth-child(#{$i})
+          animation:
+            name: menuOff
+            duration: 40ms * 1/$i*50
+            timing-function: ease-in-out
+            fill-mode: forwards
+
+@keyframes menuOn
+  0%
+    opacity: 0
+    transform: rotateY(-90deg) translateY(0px) translateX(0px)
+  100%
+    opacity: 1
+    transform: rotateY(0deg) traslateY(0px) translateX(0px)
+
+@keyframes menuOff
+  0%
+    opacity: 1
+    transform: rotateY(0deg) traslateY(0px) translateX(0px)
+  100%
+    opacity: 0
+    transform: rotateY(90deg) translateY(0px) translateX(0px)
+
 @keyframes pulse
   0%
     opacity: 0
@@ -82,8 +105,8 @@ body
 .landing
   position: absolute
   opacity: 1
-  // animation: fadeIn 2s ease-in-out 4s 
-  // animation-fill-mode: forwards
+  animation: fadeIn 2s ease-in-out
+  animation-fill-mode: forwards
 
 #canvas
   width: 100%
@@ -94,7 +117,6 @@ body
 @keyframes fadeIn
   0%
     opacity: 0
-  
   100%
     opacity: 1
 
@@ -103,53 +125,6 @@ body
     opacity: 1
   100%
     opacity: 0
-
-.statsOuter
-  position: absolute
-  top: 20px
-  left: 20px
-  padding: .5em
-  border: 1px solid #fff
-  border-radius: 31px
-  box-shadow: 0px 0px 5px #fff
-
-.statsOuter:hover
-  box-shadow: 0px 0px 8px #fff
-
-.stats
-  width: auto
-  opacity: .8
-  border: 5px solid white
-  border-radius: 22px
-  font-size: 1.6em
-  font-family: 'IBM Plex Sans', sans-serif
-  color: white
-  padding: .6em 25px
-  line-height: 1.6em
-  box-shadow: 0px 0px 10px #fff inset
-  background: -webkit-linear-gradient(top left, #000000, rgba(255,255,255,.3));
-  background: -moz-linear-gradient(top left, #000000, rgba(255,255,255,.3));
-  background: linear-gradient(to bottom right, #000000, rgba(255,255,255,.3));
-  transition: background 12s
-  li
-    text-shadow: 0px 0px 12px #fff
-    font-family: 'Unica One', cursive;
-    cursor: default
-  &:first-child
-    font-size: 1.7em
-    font-family: 'Lobster', cursive;
-    line-height: 1.5em
-    text-align: center
-    img
-      width: 240px
-      margin: 0 auto
-  &:nth-child(n+11)
-    cursor: pointer
-  
-.stats:hover
-    background: -webkit-linear-gradient(top left, #000000, rgba(255,255,255,.4));
-    background: -moz-linear-gradient(top left, #000000, rgba(255,255,255,.4));
-    background: linear-gradient(to bottom right, #000000, rgba(255,255,255,.4));
 
 .backSplash
   position: absolute
@@ -161,8 +136,6 @@ body
   top: 5vh
   left: 10vh
   height: auto
-  border-radius: 30px
-  box-shadow: -8px 0px 20px
   animation:
     name: grow
     duration: .2s
@@ -170,40 +143,23 @@ body
     delay: 1s
     fill-mode: forwards
   
-
 .innerContainer
-  border: 1px solid #ccc
-  border-radius: 18px
   margin: 15px
   display: grid
-  grid-template-columns: 20px 4fr 10px 5fr 20px
-  height: 85vh
+  grid-template-columns: .4fr 4fr 1fr 5fr 1fr
+  height: 100vh
   opacity: 1
   // animation:
   //   name: fadeIn
   //     duration: .4s
   //     delay: 1.2s
   //     fill-mode: forwards
-  img
-    display: block
-    opacity: 0
-    padding: 0
-    animation: 
-      name: fadeInPic
-      duration: .4s
-      delay: 1.2s
-      fill-mode: forwards
-  #menuPic
-    width: 100%
-    border-radius: 5px
-    box-shadow: -4px 4px 2px 0 #333
-    border: 1px solid #ccc
-    margin: 15px auto
-  #nestTitle
-    width : 100%
-    padding: 15px 0 0 0
-    margin: 0 auto
-      
+#menuPic
+  width: 200%
+  border-radius: 5px
+  box-shadow: -4px 4px 2px 0 #333
+  border: 1px solid #ccc
+  margin: 15px auto     
 
 @keyframes fadeInPic
   0%
@@ -217,64 +173,134 @@ body
   100%
     width: 40vw
 
-.main
-  width: 100%
-  height: 100%
-  opacity: 0
-
-.section
-  font-size: 2.4rem
-  padding: 1.5rem 16rem
-  line-height: 3.8rem
-  text-align: center
-  p
-    display: block
-    border-style: solid
-    border-width: 1px
-    border-color: black
-    padding: 1.8rem 1.3rem
-
-.menu
+ul.menu
   display: flex
   flex-direction: column
-  align-content: space-between
+  justify-content: space-between
   height: 100%
-  &>li
-    font-size: 3em
+  width: 100%
+  li
+    font-size: 4em
+    opacity: 0
     &:nth-child(2)
       text-align: center
       font-family: 'Great Vibes', cursive;
-      font-size: 3em
+      font-size: .2em
     &:nth-child(3)
       text-align: center
       font-family: 'Great Vibes', cursive;
-      font-size: 3.3em
-      padding: 0 0 10px 0
-      line-height: 1em
-  a:hover
-    text-shadow: 0 0 15px rgba(255,255,255,.9)
+      font-size: 4.3em
+    &:nth-child(4)
+      margin-top: 2%
+    &:nth-child(10)
+      margin-bottom: 6%
+    &:last-child
+      margin-bottom: 25px
   a
     text-decoration: none
     color: white
 
-.socialMedia
+ul.menu > li.item
+  background-color: rgba(255,255,255,.1)
+  border-radius: 5px
+  transition: background-color .3s
+  transition: text-shadow .3s
+  &:hover
+    background-color: rgba(255,255,255,.2)
+    text-shadow: 0 0 15px
+  
+ul.socialMedia
+  width: 100%
+  height: min-content
+  margin-left: 10px 
+  margin-top: 10px
   display: flex
   flex-direction: row
+  justify-content: space-around
+  // align-items: flex-end
   li
     font-size: .5em
-    width: auto
-    img
-      width: 55%
+    &:first-child
+      margin-left: -35px
+      img
+        width: 80%
     &:nth-child(2)
       img
-        width: 68%
+        width: 95%
+    &:nth-child(3)
+      margin-top: -3px
+      img
+        width: 62%
 
-    // #ig
-    //   width: 25%
+.right
+  img
+    width: 200%
+    animation:
+      name: pic
+      duration: 6s
+      delay: .5s
+      fill-mode: both
+      timing-function: ease-in-out
+  
+@keyframes pic
+  0%
+    transform: translateX(1400px)
+  6%
+    transform: translateX(-20px)
+  98%
+    transform: translateX(30px)
+  100%
+    transform: translateX(1400px)
 
 //-------------- MEDIA QUERIES -------------//
 
-// @media (max-width: 375px)
-//   #canvas
-//     left: -200px
+@media (max-width: 460px)
+  .innerContainer
+    grid-template-columns: .4fr 1fr .4fr
   
+  #title
+    width: 80%
+
+  .noMobile
+    display: none
+
+  ul.menu
+    display: flex
+    flex-direction: column
+    align-content: space-between
+
+  ul.menu
+    li
+      &:nth-child(3)
+        font-size: 3.2em
+   
+  ul.menu > li
+    .item
+      margin: 2px 0
+      padding: 0
+      height: auto
+    a
+      font-size: .73em
+  
+  ul.socialMedia
+    display: flex
+    flex-direction: row
+    justify-content: space-around
+    li
+      font-size: .5em
+      margin: 0
+      img
+        width: 100%
+        margin: 0
+      &:nth-child(2)
+        img
+          width: 122%
+          margin: 0
+      &:nth-child(3)
+        img
+          width: 72%
+          margin: -2px 0 0 32px
+
+  
+    
+      

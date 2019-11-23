@@ -2,6 +2,8 @@ import {THREE} from '../vendor';
 // import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
+import theNestObj from '../objects/theNest46.glb'
+
 import { SceneUtils } from 'three';
 
 const GLTFLoader = require('./gltfloader');
@@ -16,6 +18,7 @@ const scene = new THREE.Scene();
 // const camera = new THREE.OrthographicCamera(width/-2,width/2,height/-2,height/2,1,1000);
 const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
 
+// Moves camera along X axis according to screen width
 camera.position.z = 570;
 function cameraControls(w,h){
   if(w <= 476){
@@ -39,16 +42,14 @@ renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
 canvas.appendChild(renderer.domElement);
 
-const theNestTitle = document.createElement('img');
-theNestTitle.src = '../images/theNestTitle3.png';
-theNestTitle.id = 'nestTitle';
+// const theNestTitle = document.createElement('img');
+// theNestTitle.src = '../images/theNestTitle3.png';
 
 const items = document.querySelectorAll('li');
 const title = document.getElementById('title');
-title.appendChild(theNestTitle);
+// title.appendChild(theNestTitle);
 
 const introDiv = document.getElementById('introDiv');
-console.log(width)
 
 // setTimeout(()=>{
 //   init();
@@ -63,7 +64,7 @@ init()
 function init(){
   // THE NEST
   const loader = new THREE.GLTFLoader();
-  loader.load('../objects/theNest46.glb', (gltf) => {
+  loader.load(theNestObj, (gltf) => {
     let nest = gltf.scene.children[1];
     nest.rotation.x = Math.PI/2;
     nest.scale.set(32,1,32);
@@ -157,14 +158,6 @@ function loadProgram(){
   const curtainMat = new THREE.MeshBasicMaterial({color:0x0b0202});
   const curtain = new THREE.Mesh(curtainGeo,curtainMat);
   scene.add(curtain);
-
-  // const testPlaneGeo = new THREE.PlaneBufferGeometry(1,1)
-  // const testPlaneMat = new THREE.MeshBasicMaterial({color:0xff0000})
-  // const testPlane = new THREE.Mesh(testPlaneGeo,testPlaneMat);
-  // testPlane.scale.set(40,40,1)
-  // testPlane.position.z = -10
-  // testPlane.scale.set(869*2,490*2,1)
-  // scene.add(testPlane)
 
   // ANWING BACKSPLASH PLANE
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);

@@ -3,10 +3,53 @@ extends layout
 block content
   
   #introDiv
-    #leftIntro.intro
-      h1 Beans
+    .margin
+    #leftIntro.intro.active
+      .innerContainer
+        .margin  
+        .left.menuOn
+          ul.menu
+            //- - var n = 0
+            //- while n < 12
+            //-   li(id=n++)
+            li
+              img#title(src='../../src/images/TheNestTitle3.png')
+            li
+              hr
+            li Indian Wells
+            li.item
+              a(href='#') Home
+            li.item
+              a(href='#') Menu
+            li.item
+              a(href='#') Entertainment
+            li.item
+              a(href='#') Location
+            li.item
+              a(href='#') Banquets
+            li.item
+              a(href='#') Shop
+            li.item
+              a(href='#') Contact
+            li
+              ul.socialMedia
+                li
+                  a(href='https://www.facebook.com/The-Nest-124660990914862/')
+                    img(src="../../src/images/fb.png")
+                li
+                  a(href="https://www.instagram.com/gotothenest/") 
+                    img(src="../../src/images/ig.png")
+                li
+                  a(href="https://www.yelp.com/biz/the-nest-indian-wells-2")
+                    img(src="../../src/images/yelp.png")
+        .margin
+        .right.noMobile
+          ul.frontPagePics
+            - for (var i = 0; i < 1; i++)
+              li(style="background-image: url(" + ")")
+        .margin.noMobile
     #rightIntro.intro
-      h1 Cookinz
+    .margin
   .landing  
     //- .statsOuter
     //-   .stats
@@ -15,45 +58,10 @@ block content
     //-       while n < 12
     //-         li(id=n++)
     .backSplash
-      .innerContainer
-        .margin
-        .left
-          ul.menu
-            //- - var n = 0
-            //- while n < 12
-            //-   li(id=n++)
-            li#title
-            li
-              hr
-            li Indian Wells
-            li 
-              a(href='#') Home
-            li
-              a(href='#') Menu
-            li
-              a(href='#') Entertainment
-            li
-              a(href='#') Location
-            li
-              a(href='#') Banquets
-            li
-              a(href='#') Shop
-            li
-              a(href='#') Contact
-            li
-            li
-            li
-              ul.socialMedia
-                li
-                  a
-                    img(src="../../src/images/fb.png")
-                li
-                  a 
-                    img(src="../../src/images/ig.png")
-        .gutter
-        .right
-          img#menuPic(src="../../src/images/dodiKevin.jpg")
-        .margin
+      .gutter
+      .right
+        //- img#menuPic(src="../../src/images/dodiKevin.jpg")
+      .margin
     #canvas
   //- .main
   //-   h1=yummy

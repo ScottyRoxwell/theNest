@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import fs from 'fs';
 
 const port = process.env.PORT || 3000;
 
@@ -15,18 +16,10 @@ const webpackHotMiddleware = require('webpack-hot-middleware')(compiler);
 server.use(webpackDevMiddleware);
 server.use(webpackHotMiddleware);
 
-// server.set('views', path.join(__dirname, '../../src/views'));
-// server.set('view engine', 'pug');
-server.use(express.static('dist'));
+server.set('views', path.join(__dirname, '../../src/views'));
+server.set('view engine', 'pug');
+// server.use(express.static('dist'));
 server.use(express.static('src'));
-
-// server.get('/', (req,res)=>{
-//   res.render('index');
-// })
-
-// server.get('/about', (req,res)=>{
-//   res.render('about');
-// });
 
 server.listen(port, () => {
   console.log("The server is up and running!");
