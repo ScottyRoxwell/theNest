@@ -12,7 +12,6 @@ const end = new THREE.Vector3(400,169,-11);
 const shootingStars = [];
 
 const scene = new THREE.Scene();
-// const camera = new THREE.OrthographicCamera(width/-2,width/2,height/-2,height/2,1,1000);
 const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
 
 // Moves camera along X axis according to screen width
@@ -84,8 +83,8 @@ function init(){
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
-    nest.material.transparent = true;
-    nest.material.opacity = 0;
+    // nest.material.transparent = true;
+    // nest.material.opacity = 0;
 
     console.log(mask)
     console.log(nest)
@@ -121,7 +120,6 @@ function loadProgram(){
     camera.updateProjectionMatrix();
     cameraControls(window.innerWidth,window.innerHeight);
     composer.setSize( window.innerWidth, window.innerHeight );
-    starrySky.scale.set( window.innerWidth+50, window.innerWidth+50 );
   }
 
   // Inspector UI Controls
@@ -214,18 +212,16 @@ function loadProgram(){
   composer.addPass(effectPass2);
 
   // STARRY SKY PLANE
-  const starrySkyGeo = new THREE.PlaneBufferGeometry(1,1);
+  let starrySkyGeo = new THREE.CircleBufferGeometry((width > 1600) ? Math.max(width,height) : Math.max(width,height)*2,13);
   const skyGif = new THREE.TextureLoader().load('../../images/starrySky2.gif');
   skyGif.wrapS = THREE.RepeatWrapping;
   skyGif.wrapT = THREE.RepeatWrapping;
-  skyGif.repeat.set(4,4)
+  skyGif.repeat.set(6,6)
   const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
-  const starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
-  starrySky.scale.set(width,width,1);
+  let starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
   starrySky.position.z = -30;
   scene.add(starrySky);
   console.log(starrySky)
-  console.log(width)
 
   // STARS
   // const sky = {
