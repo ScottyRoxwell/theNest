@@ -9,7 +9,6 @@ const app = express();
 app.set('views', path.join(__dirname, './src/views'));
 app.set('view engine', 'pug');
 app.use(express.static('dist'));
-app.use(express.static('src'));
 
 var imageArr = [];
 fs.readdir('./src/images/frontPagePics', (err,images)=>{

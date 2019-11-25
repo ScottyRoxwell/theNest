@@ -18,7 +18,6 @@ server.use(webpackHotMiddleware);
 
 server.set('views', path.join(__dirname, '../../src/views'));
 server.set('view engine', 'pug');
-// server.use(express.static('dist'));
 server.use(express.static('src'));
 
 server.listen(port, () => {

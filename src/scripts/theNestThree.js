@@ -1,10 +1,7 @@
 import {THREE} from '../vendor';
-// import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
 import theNestObj from '../objects/theNest46.glb'
-
-import { SceneUtils } from 'three';
 
 const GLTFLoader = require('./gltfloader');
 
@@ -65,14 +62,17 @@ function init(){
   // THE NEST
   const loader = new THREE.GLTFLoader();
   loader.load(theNestObj, (gltf) => {
-    let nest = gltf.scene.children[1];
+    let nest, mask;
+    gltf.scene.children.forEach(child => {
+      if(child.name === "TheNestFront") nest = child;
+      if(child.name === "Mask") mask = child;
+    })
     nest.rotation.x = Math.PI/2;
     nest.scale.set(32,1,32);
     nest.position.y = -200;
     nest.position.z = -10;
 
     // Masking Layer
-    let mask = gltf.scene.children[0];
     let maskMap = mask.material.map;
     mask.material = new THREE.MeshBasicMaterial({color:0x000000, alphaMap:maskMap});
     mask.material.map = null;
@@ -84,12 +84,12 @@ function init(){
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
-    // nest.material.transparent = true;
-    // nest.material.opacity = .5;
+    nest.material.transparent = true;
+    nest.material.opacity = 0;
 
-    // console.log(mask)
-    // console.log(nest)
-    // console.log(gltf.scene)
+    console.log(mask)
+    console.log(nest)
+    console.log(gltf.scene)
     scene.add(gltf.scene);
     loadProgram();
   })
@@ -121,7 +121,7 @@ function loadProgram(){
     camera.updateProjectionMatrix();
     cameraControls(window.innerWidth,window.innerHeight);
     composer.setSize( window.innerWidth, window.innerHeight );
-    starrySky.redraw( window.innerWidth, window.innerHeight );
+    starrySky.scale.set( window.innerWidth+50, window.innerWidth+50 );
   }
 
   // Inspector UI Controls
@@ -213,106 +213,119 @@ function loadProgram(){
   composer.addPass(effectPass);
   composer.addPass(effectPass2);
 
+  // STARRY SKY PLANE
+  const starrySkyGeo = new THREE.PlaneBufferGeometry(1,1);
+  const skyGif = new THREE.TextureLoader().load('../../images/starrySky2.gif');
+  skyGif.wrapS = THREE.RepeatWrapping;
+  skyGif.wrapT = THREE.RepeatWrapping;
+  skyGif.repeat.set(4,4)
+  const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
+  const starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
+  starrySky.scale.set(width,width,1);
+  starrySky.position.z = -30;
+  scene.add(starrySky);
+  console.log(starrySky)
+  console.log(width)
+
   // STARS
-  const sky = {
-    theta: 0,
-    amount: 0,
+  // const sky = {
+  //   theta: 0,
+  //   amount: 0,
 
-    create: function(amount,w,h){
-      let obj = Object.create(this);
-      obj.amount = amount;
-      let geometry = new THREE.Geometry(1,1);
-      for(let i = 0; i < amount; i++){
-        let randomTheta = Math.random()*Math.PI*2;
-        let randomRadius = Math.random() * ((w>h)?w*1.45:h*1.45) + 150;
-        let particle = new THREE.Vector3(
-          Math.cos(randomTheta)*randomRadius,
-          Math.sin(randomTheta)*randomRadius,
-          Math.random() < .95 ? (Math.random()*20) -400 : Math.random()*-5
-        );
-        geometry.vertices.push(particle)
-      }
-      let material = new THREE.PointsMaterial({ color: 0xffffff });
-      material.size = 3;
-      obj.mesh = new THREE.Points(geometry,material);
-      obj.mesh.position.z = -30
-      scene.add(obj.mesh);
-      return obj;
-    },
-    update: function(delta){
-      this.theta += delta;
-      this.mesh.rotation.z = this.theta;
-    },
-    redraw: function(w,h){
-      scene.remove(this.mesh);
-      let geometry = new THREE.Geometry(1,1);
-      for(let i = 0; i < this.amount; i++){
-        let randomTheta = -Math.sqrt(Math.random())*Math.PI*2;
-        let randomRadius = Math.random() * ((w>h)?w*1.45:h*1.5) + 150;
-        let particle = new THREE.Vector3(
-          Math.cos(randomTheta)*randomRadius,
-          Math.sin(randomTheta)*randomRadius,
-          Math.random() < .95 ? (Math.random()*20) -400 : (Math.random()*-5)-31
-        );
-        geometry.vertices.push(particle)
-      }
-      let material = new THREE.PointsMaterial({ color: 0xffffff });
-      material.size = 2.5;
-      this.mesh = new THREE.Points(geometry,material);
-      this.mesh.position.z = -30
-      scene.add(this.mesh);
-    }
-
-  }
+  //   create: function(amount,w,h){
+  //     let obj = Object.create(this);
+  //     obj.amount = amount;
+  //     let geometry = new THREE.Geometry(1,1);
+  //     for(let i = 0; i < amount; i++){
+  //       let randomTheta = Math.random()*Math.PI*2;
+  //       let randomRadius = Math.random() * ((w>h)?w*1.45:h*1.45) + 150;
+  //       let particle = new THREE.Vector3(
+  //         Math.cos(randomTheta)*randomRadius,
+  //         Math.sin(randomTheta)*randomRadius,
+  //         Math.random() < .95 ? (Math.random()*20) -400 : Math.random()*-5
+  //       );
+  //       geometry.vertices.push(particle)
+  //     }
+  //     let material = new THREE.PointsMaterial({ color: 0xffffff });
+  //     material.size = 3;
+  //     obj.mesh = new THREE.Points(geometry,material);
+  //     obj.mesh.position.z = -30
+  //     scene.add(obj.mesh);
+  //     return obj;
+  //   },
+  //   update: function(delta){
+  //     this.theta += delta;
+  //     this.mesh.rotation.z = this.theta;
+  //   },
+  //   redraw: function(w,h){
+  //     scene.remove(this.mesh);
+  //     let geometry = new THREE.Geometry(1,1);
+  //     for(let i = 0; i < this.amount; i++){
+  //       let randomTheta = -Math.sqrt(Math.random())*Math.PI*2;
+  //       let randomRadius = Math.random() * ((w>h)?w*1.45:h*1.5) + 150;
+  //       let particle = new THREE.Vector3(
+  //         Math.cos(randomTheta)*randomRadius,
+  //         Math.sin(randomTheta)*randomRadius,
+  //         Math.random() < .95 ? (Math.random()*20) -400 : (Math.random()*-5)-31
+  //       );
+  //       geometry.vertices.push(particle)
+  //     }
+  //     let material = new THREE.PointsMaterial({ color: 0xffffff });
+  //     material.size = 2.5;
+  //     this.mesh = new THREE.Points(geometry,material);
+  //     this.mesh.position.z = -30
+  //     scene.add(this.mesh);
+  //   }
+  // }
 
   // STARRY SKY
-  let starrySky = sky.create(1400,width,height);
+  // let starrySky = sky.create(1400,width,height);
 
   // SHOOTING STARS
-  const star = {
+  // const star = {
 
-    create: function(size){
-      let obj = Object.create(this);
-      let geometry = new THREE.PlaneBufferGeometry(size,size);
-      let material = new THREE.MeshBasicMaterial(0xffffff);
-      obj.mesh = new THREE.Mesh(geometry,material);
-      return obj;
-    }
-  }
+  //   create: function(size){
+  //     let obj = Object.create(this);
+  //     let geometry = new THREE.PlaneBufferGeometry(size,size);
+  //     let material = new THREE.MeshBasicMaterial(0xffffff);
+  //     obj.mesh = new THREE.Mesh(geometry,material);
+  //     return obj;
+  //   }
+  // }
 
-  const shootingStar = {
-    speed: 2,
-    degree: 1,
-    size: 1,
+  // const shootingStar = {
+  //   speed: 2,
+  //   degree: 1,
+  //   size: 1,
 
-    create: function(tailLength){
-      let obj = Object.create(this);
-      obj.wish = new THREE.Group();
-      obj.speed = Math.random()*12.2+11;
-      obj.degree = Math.random()*3.5+.5;
-      obj.size = Math.random()*1.1+.6;
-      obj.wish.position.x = width+10; 
-      obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
-      obj.wish.position.z = -29;
-      for(let i = 1; i <= tailLength; i++){
-        let tailDot = star.create(obj.size);
-        tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
-        tailDot.mesh.scale.set(obj.size/(i/1.1),obj.size/(i/1.1),1);
-        obj.wish.add(tailDot.mesh);   
-      }
-      return obj;
-    },
-    update: function(){
-      this.wish.position.x -= this.speed;
-      this.wish.position.y -= this.degree;
-      shootingStars.forEach((wish,i) => {
-        if(wish.wish.position.x < -width/2-100){
-          shootingStars.splice(i,1);
-          scene.remove(wish.wish)
-        } 
-      })
-    }
-  }
+  //   create: function(tailLength){
+  //     let obj = Object.create(this);
+  //     obj.wish = new THREE.Group();
+  //     obj.speed = Math.random()*12.2+11;
+  //     obj.degree = Math.random()*3.5+.5;
+  //     obj.size = Math.random()*1.1+.6;
+  //     obj.wish.position.x = width+10; 
+  //     obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
+  //     obj.wish.position.z = -29;
+  //     for(let i = 1; i <= tailLength; i++){
+  //       let tailDot = star.create(obj.size);
+  //       tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
+  //       tailDot.mesh.scale.set(obj.size/(i/1.1),obj.size/(i/1.1),1);
+  //       obj.wish.add(tailDot.mesh);   
+  //     }
+  //     return obj;
+  //   },
+  //   update: function(){
+  //     this.wish.position.x -= this.speed;
+  //     this.wish.position.y -= this.degree;
+  //     shootingStars.forEach((wish,i) => {
+  //       if(wish.wish.position.x < -width/2-100){
+  //         shootingStars.splice(i,1);
+  //         scene.remove(wish.wish)
+  //       } 
+  //     })
+  //   }
+  // }
 
   // NEST LIGHTS
   const lightColor = new THREE.Color(0xffffaa);
@@ -407,7 +420,7 @@ function loadProgram(){
   })();
 
   //=================== ANIMATION =====================//
-  let delta = 0;
+  let delta = 0.0002;
   let ddelta = 0;
   let pdelta = 0;
   let qdelta = 0;
@@ -417,7 +430,6 @@ function loadProgram(){
 
   const animate = function () {
     requestAnimationFrame( animate );
-    delta = 0.00011;
     ddelta += 2;
     // CAMERA CONTROLS FOR DEVELOPMENT
     // camera.position.x = THREE.Math.mapLinear(mouseX,-width/2,width/2,-1000,1000);
@@ -490,19 +502,19 @@ function loadProgram(){
     }
 
     // SHOOTING STARS
-    if(Math.random() > .98){
-      let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
-      shootingStars.push(wish)
-      scene.add(wish.wish);
-    }
-    if(shootingStars.length){
-      shootingStars.forEach(wish => {
-        wish.update();
-      })
-    }
+    // if(Math.random() > .98){
+    //   let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
+    //   shootingStars.push(wish)
+    //   scene.add(wish.wish);
+    // }
+    // if(shootingStars.length){
+    //   shootingStars.forEach(wish => {
+    //     wish.update();
+    //   })
+    // }
     
     // SKY ROTATION
-    starrySky.update(delta);
+    starrySky.rotation.z += delta;
     
     // UI //
     // items.forEach((item,i)=>{
@@ -530,9 +542,6 @@ function loadProgram(){
     //   if(i === 11) item.innerText = mouseX;
     //   if(i === 12) item.innerText = mouseY;
     // })
-
-    // testPlane.scale.x = THREE.Math.mapLinear(Math.abs(mouseX),0,width/2,0,width)
-    // testPlane.scale.y = THREE.Math.mapLinear(Math.abs(mouseY),0,height/2,0,height)
 
     composer.render(0.1);
     // renderer.render( scene, camera );
