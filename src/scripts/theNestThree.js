@@ -8,7 +8,7 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(150,75,-16);
+const start = new THREE.Vector3(150,75,-16.0);
 const end = new THREE.Vector3(400,169,-11);
 const shootingStars = [];
 
@@ -70,7 +70,7 @@ function init(){
     nest.rotation.x = Math.PI/2;
     nest.scale.set(32,1,32);
     nest.position.y = -200;
-    nest.position.z = 0;
+    nest.position.z = 0.0;
 
     // Masking Layer
     let maskMap = mask.material.map;
@@ -81,7 +81,7 @@ function init(){
     mask.material.depthWrite = false;
     mask.rotation.x = Math.PI/2;
     mask.position.y = -200;
-    mask.position.z = 0;
+    mask.position.z = 0.0;
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
@@ -172,7 +172,7 @@ function loadProgram(){
   const moonGeo = new THREE.CircleGeometry(70,30);
   const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
   const moon = new THREE.Mesh( moonGeo, moonMat);
-  moon.position.set(250, 162, -22);
+  moon.position.set(250, 162, -22.0);
   scene.add(moon);
 
   // AWNING LIGHT
