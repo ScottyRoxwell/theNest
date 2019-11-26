@@ -8,8 +8,8 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(150,75,-16.0);
-const end = new THREE.Vector3(400,169,-11);
+const start = new THREE.Vector3(150,75,-11.0);
+const end = new THREE.Vector3(400,169,-11.0);
 const shootingStars = [];
 
 const scene = new THREE.Scene();
@@ -70,7 +70,7 @@ function init(){
     nest.rotation.x = Math.PI/2;
     nest.scale.set(32,1,32);
     nest.position.y = -200;
-    nest.position.z = 0.0;
+    nest.position.z = -10.0;
 
     // Masking Layer
     let maskMap = mask.material.map;
@@ -78,10 +78,10 @@ function init(){
     mask.material.map = null;
     mask.material.transparent = true;
     mask.material.opacity = .9;
-    mask.material.depthWrite = false;
+    // mask.material.depthWrite = false;
     mask.rotation.x = Math.PI/2;
     mask.position.y = -200;
-    mask.position.z = 0.0;
+    mask.position.z = -10.0;
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
@@ -165,7 +165,7 @@ function loadProgram(){
   const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
   backsplash.scale.set(180,40,1);
   backsplash.rotation.z = Math.PI/10;
-  backsplash.position.set(270,122,-18);
+  backsplash.position.set(270,122,-20);
   scene.add(backsplash);
 
   // MOON
@@ -418,7 +418,7 @@ function loadProgram(){
   })();
 
   //=================== ANIMATION =====================//
-  let delta = 0.0002;
+  let delta = 0.00008;
   let ddelta = 0;
   let pdelta = 0;
   let qdelta = 0;
