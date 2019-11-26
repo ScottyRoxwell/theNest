@@ -2,6 +2,7 @@ import {THREE} from '../vendor';
 import {GodRaysEffect, RenderPass, EffectPass, EffectComposer} from 'postprocessing';
 import noise from './utils/perlinNoise';
 import theNestObj from '../objects/theNest46.glb'
+import starrySkyGif from '../images/starrySky2.gif'
 
 const GLTFLoader = require('./gltfloader');
 
@@ -170,7 +171,6 @@ function loadProgram(){
   const moonGeo = new THREE.CircleGeometry(70,30);
   const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
   const moon = new THREE.Mesh( moonGeo, moonMat);
-  moon.material.depthWrite = false;
   moon.position.set(250, 162, -22);
   scene.add(moon);
 
@@ -178,7 +178,6 @@ function loadProgram(){
   const moonGeo2 = new THREE.PlaneBufferGeometry(1,1);
   const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
-  awningLight.material.depthWrite = false;
   awningLight.position.set(start.x,start.y,start.z);
   awningLight.rotation.z = Math.PI/10;
   awningLight.scale.set(130,35,1);
@@ -215,7 +214,7 @@ function loadProgram(){
 
   // STARRY SKY PLANE
   let starrySkyGeo = new THREE.CircleBufferGeometry((width > 1600) ? Math.max(width,height) : Math.max(width,height)*2,13);
-  const skyGif = new THREE.TextureLoader().load('../../images/starrySky2.gif');
+  const skyGif = new THREE.TextureLoader().load(starrySkyGif);
   skyGif.wrapS = THREE.RepeatWrapping;
   skyGif.wrapT = THREE.RepeatWrapping;
   skyGif.repeat.set(6,6)
