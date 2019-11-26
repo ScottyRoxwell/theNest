@@ -170,6 +170,7 @@ function loadProgram(){
   const moonGeo = new THREE.CircleGeometry(70,30);
   const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
   const moon = new THREE.Mesh( moonGeo, moonMat);
+  moon.material.depthWrite = false;
   moon.position.set(250, 162, -22);
   scene.add(moon);
 
@@ -177,6 +178,7 @@ function loadProgram(){
   const moonGeo2 = new THREE.PlaneBufferGeometry(1,1);
   const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
+  awningLight.material.depthWrite = false;
   awningLight.position.set(start.x,start.y,start.z);
   awningLight.rotation.z = Math.PI/10;
   awningLight.scale.set(130,35,1);
