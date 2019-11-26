@@ -71,7 +71,7 @@ function init(){
     nest.scale.set(32,1,32);
     nest.position.y = -200;
     nest.position.z = -10.0;
-    nest.material.depthFunc = 2;
+    nest.material.depthFunc = 1;
 
     // Masking Layer
     let maskMap = mask.material.map;
