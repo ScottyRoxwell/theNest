@@ -69,7 +69,7 @@ function init(){
     nest.rotation.x = Math.PI/2;
     nest.scale.set(32,1,32);
     nest.position.y = -200;
-    nest.position.z = -10;
+    nest.position.z = -8;
 
     // Masking Layer
     let maskMap = mask.material.map;
