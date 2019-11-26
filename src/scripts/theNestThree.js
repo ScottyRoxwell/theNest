@@ -8,7 +8,7 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(150,75,-11);
+const start = new THREE.Vector3(150,75,-16);
 const end = new THREE.Vector3(400,169,-11);
 const shootingStars = [];
 
@@ -70,7 +70,7 @@ function init(){
     nest.rotation.x = Math.PI/2;
     nest.scale.set(32,1,32);
     nest.position.y = -200;
-    nest.position.z = -8;
+    nest.position.z = 0;
 
     // Masking Layer
     let maskMap = mask.material.map;
@@ -164,7 +164,7 @@ function loadProgram(){
   const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
   backsplash.scale.set(180,40,1);
   backsplash.rotation.z = Math.PI/10;
-  backsplash.position.set(270,122,-11);
+  backsplash.position.set(270,122,-18);
   scene.add(backsplash);
 
   // MOON
@@ -217,7 +217,7 @@ function loadProgram(){
   const skyGif = new THREE.TextureLoader().load(starrySkyGif);
   skyGif.wrapS = THREE.RepeatWrapping;
   skyGif.wrapT = THREE.RepeatWrapping;
-  skyGif.repeat.set(6,6)
+  skyGif.repeat.set(7,7)
   const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
   let starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
   starrySky.position.z = -30;
@@ -279,50 +279,50 @@ function loadProgram(){
   // let starrySky = sky.create(1400,width,height);
 
   // SHOOTING STARS
-  // const star = {
+  const star = {
 
-  //   create: function(size){
-  //     let obj = Object.create(this);
-  //     let geometry = new THREE.PlaneBufferGeometry(size,size);
-  //     let material = new THREE.MeshBasicMaterial(0xffffff);
-  //     obj.mesh = new THREE.Mesh(geometry,material);
-  //     return obj;
-  //   }
-  // }
+    create: function(size){
+      let obj = Object.create(this);
+      let geometry = new THREE.PlaneBufferGeometry(size,size);
+      let material = new THREE.MeshBasicMaterial(0xffffff);
+      obj.mesh = new THREE.Mesh(geometry,material);
+      return obj;
+    }
+  }
 
-  // const shootingStar = {
-  //   speed: 2,
-  //   degree: 1,
-  //   size: 1,
+  const shootingStar = {
+    speed: 2,
+    degree: 1,
+    size: 1,
 
-  //   create: function(tailLength){
-  //     let obj = Object.create(this);
-  //     obj.wish = new THREE.Group();
-  //     obj.speed = Math.random()*12.2+11;
-  //     obj.degree = Math.random()*3.5+.5;
-  //     obj.size = Math.random()*1.1+.6;
-  //     obj.wish.position.x = width+10; 
-  //     obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
-  //     obj.wish.position.z = -29;
-  //     for(let i = 1; i <= tailLength; i++){
-  //       let tailDot = star.create(obj.size);
-  //       tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
-  //       tailDot.mesh.scale.set(obj.size/(i/1.1),obj.size/(i/1.1),1);
-  //       obj.wish.add(tailDot.mesh);   
-  //     }
-  //     return obj;
-  //   },
-  //   update: function(){
-  //     this.wish.position.x -= this.speed;
-  //     this.wish.position.y -= this.degree;
-  //     shootingStars.forEach((wish,i) => {
-  //       if(wish.wish.position.x < -width/2-100){
-  //         shootingStars.splice(i,1);
-  //         scene.remove(wish.wish)
-  //       } 
-  //     })
-  //   }
-  // }
+    create: function(tailLength){
+      let obj = Object.create(this);
+      obj.wish = new THREE.Group();
+      obj.speed = Math.random()*11.1+10.5;
+      obj.degree = Math.random()*2.5+1;
+      obj.size = Math.random()*1.1+.6;
+      obj.wish.position.x = width+10; 
+      obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
+      obj.wish.position.z = -25;
+      for(let i = 1; i <= tailLength; i++){
+        let tailDot = star.create(obj.size);
+        tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
+        tailDot.mesh.scale.set(obj.size/(i/1.1),obj.size/(i/1.1),1);
+        obj.wish.add(tailDot.mesh);   
+      }
+      return obj;
+    },
+    update: function(){
+      this.wish.position.x -= this.speed;
+      this.wish.position.y -= this.degree;
+      shootingStars.forEach((wish,i) => {
+        if(wish.wish.position.x < -width/2-100){
+          shootingStars.splice(i,1);
+          scene.remove(wish.wish)
+        } 
+      })
+    }
+  }
 
   // NEST LIGHTS
   const lightColor = new THREE.Color(0xffffaa);
@@ -499,16 +499,16 @@ function loadProgram(){
     }
 
     // SHOOTING STARS
-    // if(Math.random() > .98){
-    //   let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
-    //   shootingStars.push(wish)
-    //   scene.add(wish.wish);
-    // }
-    // if(shootingStars.length){
-    //   shootingStars.forEach(wish => {
-    //     wish.update();
-    //   })
-    // }
+    if(Math.random() > .98){
+      let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
+      shootingStars.push(wish)
+      scene.add(wish.wish);
+    }
+    if(shootingStars.length){
+      shootingStars.forEach(wish => {
+        wish.update();
+      })
+    }
     
     // SKY ROTATION
     starrySky.rotation.z += delta;
