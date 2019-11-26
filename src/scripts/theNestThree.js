@@ -184,20 +184,20 @@ function loadProgram(){
 
   // GODRAYS
   let godraysEffect = new GodRaysEffect(camera, moon,{
-    resolutionScale: .7,
-    density: 3,
+    resolutionScale: .3,
+    density: 1,
     decay: .97,
     weight: .2,
-    samples: 320,
+    samples: 20,
     blur: false
   });
 
   let godraysEffect2 = new GodRaysEffect(camera, awningLight,{
-    resolutionScale: .8,
+    resolutionScale: .6,
     density: 4,
     decay: .951,
     weight: .21,
-    samples: 320,
+    samples: 100,
     blur: true
   });
 
