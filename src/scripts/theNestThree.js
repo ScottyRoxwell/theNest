@@ -81,6 +81,7 @@ function init(){
     mask.material.depthWrite = false;
     mask.rotation.x = Math.PI/2;
     mask.position.y = -200;
+    mask.position.z = 0;
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
