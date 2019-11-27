@@ -17,22 +17,22 @@ const camera = new THREE.PerspectiveCamera(80,width/height,1,1000);
 
 // Moves camera along X axis according to screen width
 camera.position.z = 570;
-// function cameraControls(w,h){
-//   if(w <= 476){
-//     camera.position.x = 160;
-//     camera.lookAt(160,0,0);
-//   } else if(w <= 568){
-//     camera.position.x = 125;
-//     camera.lookAt(125,0,0);
-//   } else if(w <= 800){
-//     camera.position.x = 135;
-//     camera.lookAt(135,0,0);
-//   } else {
-//     camera.position.x = 0;
-//     camera.lookAt(0,0,0);
-//   }
-// }
-// cameraControls(width);
+function cameraControls(w,h){
+  if(w <= 476){
+    camera.position.x = 160;
+    camera.lookAt(160,0,0);
+  } else if(w <= 568){
+    camera.position.x = 125;
+    camera.lookAt(125,0,0);
+  } else if(w <= 800){
+    camera.position.x = 135;
+    camera.lookAt(135,0,0);
+  } else {
+    camera.position.x = 0;
+    camera.lookAt(0,0,0);
+  }
+}
+cameraControls(width);
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(width,height);
@@ -119,7 +119,7 @@ function loadProgram(){
   function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    // cameraControls(window.innerWidth,window.innerHeight);
+    cameraControls(window.innerWidth,window.innerHeight);
     composer.setSize( window.innerWidth, window.innerHeight );
   }
 
@@ -425,9 +425,23 @@ function loadProgram(){
   let lerper = 0;
   let mouse = new THREE.Vector3(mouseX,mouseY,0)
 
-  const animate = function () {
-    requestAnimationFrame( animate );
+  
+  let now,elapsed,then,fpsInterval,startTime;
+
+  (function startAnimating(fps){
+    fpsInterval = 1000/fps;
+    then = Date.now();
+    startTime = then;
+    animate();
+  })(60)
+
+  function animate() {
     ddelta += 2;
+    now = Date.now();
+    elapsed = now - then;
+    if(elapsed  > fpsInterval){
+      then = now - (elapsed % fpsInterval);
+    
     // CAMERA CONTROLS FOR DEVELOPMENT
     // camera.position.x = THREE.Math.mapLinear(mouseX,-width/2,width/2,-1000,1000);
     // camera.position.y = THREE.Math.mapLinear(mouseY,-height/2,height/2,-1000,1000);
@@ -539,10 +553,10 @@ function loadProgram(){
     //   if(i === 11) item.innerText = mouseX;
     //   if(i === 12) item.innerText = mouseY;
     // })
-
+  }
     composer.render();
     // renderer.render( scene, camera );
+    requestAnimationFrame( animate );
   };
 
-  animate();
 }
