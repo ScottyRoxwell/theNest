@@ -84,8 +84,8 @@ function init(){
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
-    nest.material.transparent = true;
-    nest.material.opacity = .7;
+    // nest.material.transparent = true;
+    // nest.material.opacity = .7;
 
     console.log(mask)
     console.log(nest)
