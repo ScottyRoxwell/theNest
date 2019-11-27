@@ -188,7 +188,7 @@ function loadProgram(){
     resolutionScale: .3,
     density: .9,
     decay: .97,
-    weight: .15,
+    weight: .19,
     samples: 20,
     blur: false
   });
@@ -197,7 +197,7 @@ function loadProgram(){
     resolutionScale: .6,
     density: .9,
     decay: .951,
-    weight: .16,
+    weight: .2,
     samples: 100,
     blur: true
   });
