@@ -8,8 +8,8 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(150,75,-11.0);
-const end = new THREE.Vector3(400,169,-11.0);
+const start = new THREE.Vector3(150,75,-80.0);
+const end = new THREE.Vector3(400,169,-80.0);
 const shootingStars = [];
 
 const scene = new THREE.Scene();
@@ -84,8 +84,8 @@ function init(){
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
-    // nest.material.transparent = true;
-    // nest.material.opacity = 0;
+    nest.material.transparent = true;
+    nest.material.opacity = .6;
 
     console.log(mask)
     console.log(nest)
@@ -164,14 +164,14 @@ function loadProgram(){
   const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
   backsplash.scale.set(180,40,1);
   backsplash.rotation.z = Math.PI/10;
-  backsplash.position.set(270,122,-20);
+  backsplash.position.set(270,122,-100);
   scene.add(backsplash);
 
   // MOON
   const moonGeo = new THREE.CircleGeometry(70,30);
   const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
   const moon = new THREE.Mesh( moonGeo, moonMat);
-  moon.position.set(250, 162, -182.0);
+  moon.position.set(250, 162, -102.0);
   scene.add(moon);
 
   // AWNING LIGHT
@@ -220,7 +220,7 @@ function loadProgram(){
   skyGif.repeat.set(7,7)
   const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
   let starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
-  starrySky.position.z = -184;
+  starrySky.position.z = -106;
   scene.add(starrySky);
   console.log(starrySky)
 
@@ -496,14 +496,14 @@ function loadProgram(){
       }
 
       // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
-      if(moon.position.y >= 198) backsplash.position.z = -12;
+      if(moon.position.y >= 198) backsplash.position.z = -101;
       
       // AWNING GODRAYS
-      if(backsplash.position.z === -12){
+      if(backsplash.position.z === -101){
         lerper += .0009;
         if(awningLight.position.x > end.x){
           awningLight.material.opacity = 0;
-          awningLight.position.set(170,91,-11);
+          awningLight.position.set(170,91,start.z);
           lerper = 0;
         } else {
           awningLight.material.opacity = 1;
