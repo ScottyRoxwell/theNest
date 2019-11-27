@@ -171,7 +171,7 @@ function loadProgram(){
   const moonGeo = new THREE.CircleGeometry(70,30);
   const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
   const moon = new THREE.Mesh( moonGeo, moonMat);
-  moon.position.set(250, 162, -22.0);
+  moon.position.set(250, 162, -42.0);
   scene.add(moon);
 
   // AWNING LIGHT
@@ -220,7 +220,7 @@ function loadProgram(){
   skyGif.repeat.set(7,7)
   const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
   let starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
-  starrySky.position.z = -30;
+  starrySky.position.z = -44;
   scene.add(starrySky);
   console.log(starrySky)
 
@@ -303,7 +303,7 @@ function loadProgram(){
       obj.size = Math.random()*1.1+.6;
       obj.wish.position.x = width+10; 
       obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
-      obj.wish.position.z = -25;
+      obj.wish.position.z = -43;
       for(let i = 1; i <= tailLength; i++){
         let tailDot = star.create(obj.size);
         tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
