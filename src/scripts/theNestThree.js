@@ -8,8 +8,8 @@ const GLTFLoader = require('./gltfloader');
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-const start = new THREE.Vector3(150,75,-80.0);
-const end = new THREE.Vector3(400,169,-80.0);
+const start = new THREE.Vector3(188,95,-117.0);
+const end = new THREE.Vector3(459,189,-117.0);
 const shootingStars = [];
 
 const scene = new THREE.Scene();
@@ -85,7 +85,7 @@ function init(){
 
     // Tranparency settings for development
     // nest.material.transparent = true;
-    // nest.material.opacity = .6;
+    // nest.material.opacity = .7;
 
     console.log(mask)
     console.log(nest)
@@ -164,7 +164,7 @@ function loadProgram(){
   const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
   backsplash.scale.set(180,40,1);
   backsplash.rotation.z = Math.PI/10;
-  backsplash.position.set(270,122,-100);
+  backsplash.position.set(325,144,-118);
   scene.add(backsplash);
 
   // MOON
@@ -220,7 +220,7 @@ function loadProgram(){
   skyGif.repeat.set(7,7)
   const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
   let starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
-  starrySky.position.z = -126;
+  starrySky.position.z = -124;
   scene.add(starrySky);
   console.log(starrySky)
 
@@ -303,7 +303,7 @@ function loadProgram(){
       obj.size = Math.random()*1.1+.6;
       obj.wish.position.x = width+10; 
       obj.wish.position.y = Math.random()*(height/2+50)+(height/2*.8);
-      obj.wish.position.z = -43;
+      obj.wish.position.z = -11;
       for(let i = 1; i <= tailLength; i++){
         let tailDot = star.create(obj.size);
         tailDot.mesh.position.set(obj.speed*(i-1), obj.degree*(i-1), 0);
@@ -496,10 +496,10 @@ function loadProgram(){
       }
 
       // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
-      if(moon.position.y >= 198) backsplash.position.z = -101;
+      if(moon.position.y >= 198) backsplash.position.z = -119;
       
       // AWNING GODRAYS
-      if(backsplash.position.z === -101){
+      if(backsplash.position.z === -119){
         lerper += .0009;
         if(awningLight.position.x > end.x){
           awningLight.material.opacity = 0;
