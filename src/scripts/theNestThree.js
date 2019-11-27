@@ -180,7 +180,7 @@ function loadProgram(){
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
   awningLight.position.set(338,145,-117.0);
   awningLight.rotation.z = Math.PI/10;
-  awningLight.scale.set(200,95,1);
+  awningLight.scale.set(250,95,1);
   scene.add(awningLight);
 
   // GODRAYS
