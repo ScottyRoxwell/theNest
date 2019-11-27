@@ -84,8 +84,8 @@ function init(){
     mask.scale.set(32,1,32);
 
     // Tranparency settings for development
-    // nest.material.transparent = true;
-    // nest.material.opacity = .7;
+    nest.material.transparent = true;
+    nest.material.opacity = .7;
 
     console.log(mask)
     console.log(nest)
@@ -162,7 +162,7 @@ function loadProgram(){
   const backsplashGeo = new THREE.PlaneBufferGeometry(1,1);
   const backsplachMat = new THREE.MeshPhongMaterial(0xffffff);
   const backsplash = new THREE.Mesh(backsplashGeo,backsplachMat);
-  backsplash.scale.set(180,40,1);
+  backsplash.scale.set(240,100,1);
   backsplash.rotation.z = Math.PI/10;
   backsplash.position.set(325,144,-118);
   scene.add(backsplash);
@@ -180,7 +180,7 @@ function loadProgram(){
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
   awningLight.position.set(start.x,start.y,start.z);
   awningLight.rotation.z = Math.PI/10;
-  awningLight.scale.set(130,35,1);
+  awningLight.scale.set(130,95,1);
   scene.add(awningLight);
 
   // GODRAYS
