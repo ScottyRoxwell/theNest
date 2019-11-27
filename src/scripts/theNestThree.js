@@ -178,9 +178,9 @@ function loadProgram(){
   const moonGeo2 = new THREE.PlaneBufferGeometry(1,1);
   const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
   const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
-  awningLight.position.set(start.x,start.y,start.z);
+  awningLight.position.set(338,145,-117.0);
   awningLight.rotation.z = Math.PI/10;
-  awningLight.scale.set(130,95,1);
+  awningLight.scale.set(200,95,1);
   scene.add(awningLight);
 
   // GODRAYS
@@ -499,17 +499,17 @@ function loadProgram(){
       if(moon.position.y >= 198) backsplash.position.z = -119;
       
       // AWNING GODRAYS
-      if(backsplash.position.z === -119){
-        lerper += .0009;
-        if(awningLight.position.x > end.x){
-          awningLight.material.opacity = 0;
-          awningLight.position.set(170,91,start.z);
-          lerper = 0;
-        } else {
-          awningLight.material.opacity = 1;
-          awningLight.position.lerpVectors(start,end,lerper);
-        }
-      }
+      // if(backsplash.position.z === -119){
+      //   lerper += .0009;
+      //   if(awningLight.position.x > end.x){
+      //     awningLight.material.opacity = 0;
+      //     awningLight.position.set(170,91,start.z);
+      //     lerper = 0;
+      //   } else {
+      //     awningLight.material.opacity = 1;
+      //     awningLight.position.lerpVectors(start,end,lerper);
+      //   }
+      // }
 
       // SHOOTING STARS
       if(Math.random() > .98){
