@@ -56,6 +56,52 @@ const introDiv = document.getElementById('introDiv');
 //   introDiv.remove();
 // },6000);
 
+  // MOON
+  const moonGeo = new THREE.CircleGeometry(70,30);
+  const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
+  const moon = new THREE.Mesh( moonGeo, moonMat);
+  moon.position.set(250, 162, -22.0);
+  scene.add(moon);
+
+  // AWNING LIGHT
+  const moonGeo2 = new THREE.PlaneBufferGeometry(1,1);
+  const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
+  const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
+  awningLight.position.set(start.x,start.y,start.z);
+  awningLight.rotation.z = Math.PI/10;
+  awningLight.scale.set(130,35,1);
+  scene.add(awningLight);
+
+  // GODRAYS
+  let godraysEffect = new GodRaysEffect(camera, moon,{
+    resolutionScale: .3,
+    density: 1,
+    decay: .97,
+    weight: .2,
+    samples: 20,
+    blur: false
+  });
+
+  let godraysEffect2 = new GodRaysEffect(camera, awningLight,{
+    resolutionScale: .6,
+    density: 4,
+    decay: .951,
+    weight: .21,
+    samples: 100,
+    blur: true
+  });
+
+  let renderPass = new RenderPass(scene,camera);
+  let effectPass = new EffectPass(camera,godraysEffect);
+  let effectPass2 = new EffectPass(camera,godraysEffect2);
+  effectPass2.renderToScreen = true;
+
+  let composer = new EffectComposer(renderer);
+  composer.addPass(renderPass);
+  composer.addPass(effectPass);
+  composer.addPass(effectPass2);
+
+
 init()
 
 function init(){
@@ -71,7 +117,6 @@ function init(){
     nest.scale.set(32,1,32);
     nest.position.y = -200;
     nest.position.z = -10.0;
-    nest.material.depthFunc = 0;
 
     // Masking Layer
     let maskMap = mask.material.map;
@@ -79,7 +124,6 @@ function init(){
     mask.material.map = null;
     mask.material.transparent = true;
     mask.material.opacity = .9;
-    // mask.material.depthWrite = false;
     mask.rotation.x = Math.PI/2;
     mask.position.y = -200;
     mask.position.z = -10.0;
@@ -169,50 +213,6 @@ function loadProgram(){
   backsplash.position.set(270,122,-20);
   scene.add(backsplash);
 
-  // MOON
-  const moonGeo = new THREE.CircleGeometry(70,30);
-  const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
-  const moon = new THREE.Mesh( moonGeo, moonMat);
-  moon.position.set(250, 162, -22.0);
-  scene.add(moon);
-
-  // AWNING LIGHT
-  const moonGeo2 = new THREE.PlaneBufferGeometry(1,1);
-  const moonMat2 = new THREE.MeshBasicMaterial({color: 0x777776});
-  const awningLight = new THREE.Mesh( moonGeo2, moonMat2);
-  awningLight.position.set(start.x,start.y,start.z);
-  awningLight.rotation.z = Math.PI/10;
-  awningLight.scale.set(130,35,1);
-  scene.add(awningLight);
-
-  // GODRAYS
-  let godraysEffect = new GodRaysEffect(camera, moon,{
-    resolutionScale: .3,
-    density: 1,
-    decay: .97,
-    weight: .2,
-    samples: 20,
-    blur: false
-  });
-
-  let godraysEffect2 = new GodRaysEffect(camera, awningLight,{
-    resolutionScale: .6,
-    density: 4,
-    decay: .951,
-    weight: .21,
-    samples: 100,
-    blur: true
-  });
-
-  let renderPass = new RenderPass(scene,camera);
-  let effectPass = new EffectPass(camera,godraysEffect);
-  let effectPass2 = new EffectPass(camera,godraysEffect2);
-  effectPass2.renderToScreen = true;
-
-  let composer = new EffectComposer(renderer);
-  composer.addPass(renderPass);
-  composer.addPass(effectPass);
-  composer.addPass(effectPass2);
 
   // STARRY SKY PLANE
   let starrySkyGeo = new THREE.CircleBufferGeometry((width > 1600) ? Math.max(width,height) : Math.max(width,height)*2,13);
@@ -419,7 +419,7 @@ function loadProgram(){
   })();
 
   //=================== ANIMATION =====================//
-  let delta = 0.00008;
+  let delta = 0.0001;
   let ddelta = 0;
   let pdelta = 0;
   let qdelta = 0;
@@ -542,7 +542,7 @@ function loadProgram(){
     //   if(i === 12) item.innerText = mouseY;
     // })
 
-    composer.render(0.1);
+    composer.render();
     // renderer.render( scene, camera );
   };
 
