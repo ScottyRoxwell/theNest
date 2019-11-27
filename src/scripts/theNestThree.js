@@ -186,18 +186,18 @@ function loadProgram(){
   // GODRAYS
   let godraysEffect = new GodRaysEffect(camera, moon,{
     resolutionScale: .3,
-    density: 1,
+    density: .9,
     decay: .97,
-    weight: .2,
+    weight: .15,
     samples: 20,
     blur: false
   });
 
   let godraysEffect2 = new GodRaysEffect(camera, awningLight,{
     resolutionScale: .6,
-    density: 4,
+    density: .9,
     decay: .951,
-    weight: .21,
+    weight: .16,
     samples: 100,
     blur: true
   });
@@ -426,12 +426,11 @@ function loadProgram(){
   let mouse = new THREE.Vector3(mouseX,mouseY,0)
 
   
-  let now,elapsed,then,fpsInterval,startTime;
+  let now,elapsed,then,fpsInterval;
 
   (function startAnimating(fps){
     fpsInterval = 1000/fps;
     then = Date.now();
-    startTime = then;
     animate();
   })(60)
 
@@ -442,118 +441,119 @@ function loadProgram(){
     if(elapsed  > fpsInterval){
       then = now - (elapsed % fpsInterval);
     
-    // CAMERA CONTROLS FOR DEVELOPMENT
-    // camera.position.x = THREE.Math.mapLinear(mouseX,-width/2,width/2,-1000,1000);
-    // camera.position.y = THREE.Math.mapLinear(mouseY,-height/2,height/2,-1000,1000);
-    // camera.lookAt(0,0,0)
+      // CAMERA CONTROLS FOR DEVELOPMENT
+      // camera.position.x = THREE.Math.mapLinear(mouseX,-width/2,width/2,-1000,1000);
+      // camera.position.y = THREE.Math.mapLinear(mouseY,-height/2,height/2,-1000,1000);
+      // camera.lookAt(0,0,0)
 
-    // LIGHT FLICKER
-    pdelta += 0.07;
-    qdelta += 0.03;
-    s = noise(qdelta);
-    p = noise(pdelta);
-    q = noise(pdelta*.7);
-    r = noise(pdelta*.5);
-    light1.intensity = THREE.Math.mapLinear(p,0,1,4.5,6);
-    light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
-    light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
-    groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
+      // LIGHT FLICKER
+      pdelta += 0.07;
+      qdelta += 0.03;
+      s = noise(qdelta);
+      p = noise(pdelta);
+      q = noise(pdelta*.7);
+      r = noise(pdelta*.5);
+      light1.intensity = THREE.Math.mapLinear(p,0,1,4.5,6);
+      light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
+      light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
+      groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
 
-    xmasLights.forEach(light=>{
-      light.intensity = THREE.Math.mapLinear(s/2,0,1,2,6)
+      xmasLights.forEach(light=>{
+        light.intensity = THREE.Math.mapLinear(s/2,0,1,2,6)
+      })
+
+      // Make mouse light up lights
+      mouse.x = mouseX;
+      mouse.y = mouseY;
+
+      xmasLights.forEach(light=>{
+      if(light.position.distanceTo(mouse)< 100){
+        let distance = light.position.distanceTo(mouse);
+        let defaultIntesity = light.intensity;
+        light.intensity = THREE.Math.mapLinear(distance,0,100,10,defaultIntesity);
+      }
+      if(ddelta % 4 === 0) light.intensity = 0.5;
     })
 
-    // Make mouse light up lights
-    mouse.x = mouseX;
-    mouse.y = mouseY;
+      // HEADLIGHT MOVEMENT
+      // theta += 0.03;
+      // radius = 70;
+      // headlight1.target.position.x = (Math.cos(theta)*radius)-300;
+      // headlight1.target.position.y = (Math.sin(theta)*radius*1.8);
+      // headlight2.target.position.x = (Math.cos(theta)*radius);
+      // headlight2.target.position.y = (Math.sin(theta)*radius)-400;
+      // Mouse controlled headlights
+      // headlight1.target.position.set(mouseX,mouseY,-10);
+      // headlight2.target.position.set(mouseX,mouseY,-10);
 
-    xmasLights.forEach(light=>{
-    if(light.position.distanceTo(mouse)< 100){
-      let distance = light.position.distanceTo(mouse);
-      let defaultIntesity = light.intensity;
-      light.intensity = THREE.Math.mapLinear(distance,0,100,10,defaultIntesity);
-    }
-    if(ddelta % 4 === 0) light.intensity = 0.5;
-  })
+      // MOONRISE
+      const moonMaxHeight = 400;
+      moon.position.y += (moonMaxHeight-moon.position.y)*.0008;
 
-    // HEADLIGHT MOVEMENT
-    // theta += 0.03;
-    // radius = 70;
-    // headlight1.target.position.x = (Math.cos(theta)*radius)-300;
-    // headlight1.target.position.y = (Math.sin(theta)*radius*1.8);
-    // headlight2.target.position.x = (Math.cos(theta)*radius);
-    // headlight2.target.position.y = (Math.sin(theta)*radius)-400;
-    // Mouse controlled headlights
-    // headlight1.target.position.set(mouseX,mouseY,-10);
-    // headlight2.target.position.set(mouseX,mouseY,-10);
-
-    // MOONRISE
-    const moonMaxHeight = 400;
-    moon.position.y += (moonMaxHeight-moon.position.y)*.0008;
-
-    // SANDS LIGHTING
-    if(moon.position.y > 230 && moon.position.y < 270){
-      headlight1.intensity = THREE.Math.mapLinear(moon.position.y,230,270,0,5);
-    }
-
-    // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
-    if(moon.position.y >= 198) backsplash.position.z = -12;
-    
-    // AWNING GODRAYS
-    if(backsplash.position.z === -12){
-      lerper += .0009;
-      if(awningLight.position.x > end.x){
-        awningLight.material.opacity = 0;
-        awningLight.position.set(170,91,-11);
-        lerper = 0;
-      } else {
-        awningLight.material.opacity = 1;
-        awningLight.position.lerpVectors(start,end,lerper);
+      // SANDS LIGHTING
+      if(moon.position.y > 230 && moon.position.y < 270){
+        headlight1.intensity = THREE.Math.mapLinear(moon.position.y,230,270,0,5);
       }
+
+      // AWNING BACKSPLASH RECEDE TO PREVENT MOONLIGHT FROM INITIALLY SHINING THROUGH
+      if(moon.position.y >= 198) backsplash.position.z = -12;
+      
+      // AWNING GODRAYS
+      if(backsplash.position.z === -12){
+        lerper += .0009;
+        if(awningLight.position.x > end.x){
+          awningLight.material.opacity = 0;
+          awningLight.position.set(170,91,-11);
+          lerper = 0;
+        } else {
+          awningLight.material.opacity = 1;
+          awningLight.position.lerpVectors(start,end,lerper);
+        }
+      }
+
+      // SHOOTING STARS
+      if(Math.random() > .98){
+        let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
+        shootingStars.push(wish)
+        scene.add(wish.wish);
+      }
+      if(shootingStars.length){
+        shootingStars.forEach(wish => {
+          wish.update();
+        })
+      }
+      
+      // SKY ROTATION
+      starrySky.rotation.z += delta;
+      
+      // UI //
+      // items.forEach((item,i)=>{
+      //   let radius = (Math.floor(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
+      //   let cosX = (Math.floor(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
+      //   let sinY = (Math.floor(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
+      //   let radiansFull = Math.sign(Math.atan2(sinY,cosX)) === 1 ? Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2) : Math.floor((Math.PI*2 + (Math.atan2(sinY,cosX)))*Math.pow(10,2))/Math.pow(10,2);
+      //   let radiansHalf = Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2);
+      //   let degreesFull = Math.floor(180*radiansFull/Math.PI*Math.pow(10,2))/Math.pow(10,2);
+      //   let degreesHalf = Math.floor(180*radiansHalf/Math.PI*Math.pow(10,2))/Math.pow(10,2);
+      //   if(i === 1) item.innerText = 'Width: ' + window.innerWidth;
+      //   if(i === 2) item.innerText = 'Height: ' + window.innerHeight;
+      //   if(i === 3) item.innerText = 'MouseX: ' + clientX;
+      //   if(i === 4) item.innerText = 'MouseY: ' + clientY;
+      //   if(i === 5) item.innerText = 'ThreeX: ' + mouseX;
+      //   if(i === 6) item.innerText = 'ThreeY: ' + mouseY;
+      //   if(i === 7) item.innerText = 'cosX: ' + cosX;
+      //   if(i === 8) item.innerText = 'sinY: ' + sinY;
+      //   if(i === 9) item.innerText = 'Radius: ' + radius;
+      //   if(i === 10) item.innerText = 'Radians: ' + ((fullRad) ? radiansFull : radiansHalf);
+      //   if(i === 11) item.innerText = 'Degrees: ' + ((fullDeg) ? degreesFull : degreesHalf);
+      // })
+
+      // items.forEach((item,i)=>{
+      //   if(i === 11) item.innerText = mouseX;
+      //   if(i === 12) item.innerText = mouseY;
+      // })
     }
 
-    // SHOOTING STARS
-    if(Math.random() > .98){
-      let wish = shootingStar.create(Math.ceil(Math.random()*30+25));
-      shootingStars.push(wish)
-      scene.add(wish.wish);
-    }
-    if(shootingStars.length){
-      shootingStars.forEach(wish => {
-        wish.update();
-      })
-    }
-    
-    // SKY ROTATION
-    starrySky.rotation.z += delta;
-    
-    // UI //
-    // items.forEach((item,i)=>{
-    //   let radius = (Math.floor(Math.sqrt(mouseX * mouseX + mouseY * mouseY)*Math.pow(10,2)))/Math.pow(10,2);
-    //   let cosX = (Math.floor(mouseX/radius*Math.pow(10,4)))/Math.pow(10,4);
-    //   let sinY = (Math.floor(mouseY/radius*Math.pow(10,4)))/Math.pow(10,4);
-    //   let radiansFull = Math.sign(Math.atan2(sinY,cosX)) === 1 ? Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2) : Math.floor((Math.PI*2 + (Math.atan2(sinY,cosX)))*Math.pow(10,2))/Math.pow(10,2);
-    //   let radiansHalf = Math.floor((Math.atan2(sinY,cosX))*Math.pow(10,2))/Math.pow(10,2);
-    //   let degreesFull = Math.floor(180*radiansFull/Math.PI*Math.pow(10,2))/Math.pow(10,2);
-    //   let degreesHalf = Math.floor(180*radiansHalf/Math.PI*Math.pow(10,2))/Math.pow(10,2);
-    //   if(i === 1) item.innerText = 'Width: ' + window.innerWidth;
-    //   if(i === 2) item.innerText = 'Height: ' + window.innerHeight;
-    //   if(i === 3) item.innerText = 'MouseX: ' + clientX;
-    //   if(i === 4) item.innerText = 'MouseY: ' + clientY;
-    //   if(i === 5) item.innerText = 'ThreeX: ' + mouseX;
-    //   if(i === 6) item.innerText = 'ThreeY: ' + mouseY;
-    //   if(i === 7) item.innerText = 'cosX: ' + cosX;
-    //   if(i === 8) item.innerText = 'sinY: ' + sinY;
-    //   if(i === 9) item.innerText = 'Radius: ' + radius;
-    //   if(i === 10) item.innerText = 'Radians: ' + ((fullRad) ? radiansFull : radiansHalf);
-    //   if(i === 11) item.innerText = 'Degrees: ' + ((fullDeg) ? degreesFull : degreesHalf);
-    // })
-
-    // items.forEach((item,i)=>{
-    //   if(i === 11) item.innerText = mouseX;
-    //   if(i === 12) item.innerText = mouseY;
-    // })
-  }
     composer.render();
     // renderer.render( scene, camera );
     requestAnimationFrame( animate );
