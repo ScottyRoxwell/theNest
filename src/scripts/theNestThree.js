@@ -171,7 +171,7 @@ function loadProgram(){
   const moonGeo = new THREE.CircleGeometry(70,30);
   const moonMat = new THREE.MeshBasicMaterial({color: 0x777788});
   const moon = new THREE.Mesh( moonGeo, moonMat);
-  moon.position.set(250, 162, -102.0);
+  moon.position.set(250, 162, -152.0);
   scene.add(moon);
 
   // AWNING LIGHT
@@ -220,7 +220,7 @@ function loadProgram(){
   skyGif.repeat.set(7,7)
   const starrySkyMat = new THREE.MeshBasicMaterial({map: skyGif});
   let starrySky = new THREE.Mesh(starrySkyGeo,starrySkyMat);
-  starrySky.position.z = -106;
+  starrySky.position.z = -156;
   scene.add(starrySky);
   console.log(starrySky)
 
