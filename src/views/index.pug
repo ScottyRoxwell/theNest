@@ -4,36 +4,33 @@ block content
   
   #introDiv
     .margin
-    #leftIntro.intro.active
+    #leftIntro.intro
       .innerContainer 
         .left.menuOn
           ul.menu
             //- - var n = 0
             //- while n < 12
             //-   li(id=n++)
-            li
+            li.title
               img#title(src='../images/TheNestTitle3.png')
             li
               hr
             li Indian Wells
             li.item
-              a(href='#') Home
-            li.item
               a(href='#') Menu
-            li.item
-              a(href='#') Entertainment
             li.item
               a(href='#') Location
             li.item
               a(href='#') Banquets
             li.item
+              a(href='#') Entertainment
+            li.item
               a(href='#') Shop
             li.item
               a(href='#') Contact
-            li.openTable
-              a(href="#") 
-                img(src="../images/opentable.gif")
-            li
+            li.item
+              a(href='#') Book Reservation
+            li.social
               ul.socialMedia
                 li
                   a(href='https://www.facebook.com/The-Nest-124660990914862/')
@@ -44,11 +41,11 @@ block content
                 li
                   a(href="https://www.yelp.com/biz/the-nest-indian-wells-2")
                     img(src="../images/yelp1.png")
-        .right.noMobile
+        //- .right.noMobile
           ul.frontPagePics
             - for (var i = 0; i < 1; i++)
               li(style="background-image: url(" + ")")
-    #rightIntro.intro
+    //- #rightIntro.intro
     .margin
   .landing  
     #canvas

@@ -10,14 +10,12 @@ body
   overflow: hidden
   font-family: 'Unica One'
 
-#introDiv
+#introDiv 
   display: grid
-  grid-template-columns: .2fr 5fr 5fr .2fr
-  width: 100%
-  height: 100vh
+  grid-template-columns: .04fr 1fr .04fr
   position: absolute
   z-index: 1
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0,0,0,0)
   opacity: 1
   
 .intro
@@ -39,6 +37,7 @@ body
 .left
   perspective: 1000px
   opacity: .7
+  height: 100vh
   li
     transform-origin: -40px 0 200px
 
@@ -122,9 +121,6 @@ body
     opacity: 0
   
 .innerContainer
-  display: grid
-  grid-template-columns: 5fr 5fr
-  // grid-gap: 10px 10px
   height: 100vh
   opacity: 1
   // animation:
@@ -151,51 +147,61 @@ body
   100%
     width: 40vw
 
+#title
+  padding-top: 4px
+  width: 100%
+  margin-bottom: -14px
+
 ul.menu
   display: flex
   flex-direction: column
-  width: 100%
+  justify-content: space-between
+  height: 100vh
   & > li
-    font-size: 4em
+    font-size: 1.3em
     opacity: 0
     &:nth-child(2)
       text-align: center
       font-family: 'Great Vibes', cursive;
       font-size: .2em
+      margin-bottom: -5px
     &:nth-child(3)
       text-align: center
       font-family: 'Great Vibes', cursive;
-      font-size: 4.3em
+      font-size: 3.3em
+
     &:nth-child(4)
       margin-top: 2%
-    // &:nth-child(10)
-    //   margin-bottom: 6%
   a
     text-decoration: none
     color: white
-
-ul.menu > li.openTable
-  img
-    width: 90%
-    margin: 5px
+    padding: 10px 20px 10px 10px
+    font-size: 1.25em
 
 ul.menu > li.item
+  display: block
   background-color: rgba(255,255,255,.1)
   border-radius: 5px
   transition: background-color .3s
   transition: text-shadow .3s
+  width: fit-content
+  &:hover
+    background-color: rgba(255,255,255,.2)
+    text-shadow: 0 0 15px
+
+ul.menu > li.social
+  margin-top: -10px
   &:hover
     background-color: rgba(255,255,255,.2)
     text-shadow: 0 0 15px
   
 ul.socialMedia
   width: 100%
-  height: min-content
   display: flex
   flex-direction: row
   justify-content: space-around
   & > li > a > img
-    width: 80%
+    width: 70%
 
 .right
   img
@@ -217,34 +223,32 @@ ul.socialMedia
   100%
     transform: translateX(1400px)
 
+.noMobile
+  display: block
+
+.yesMobile
+  display: none
+
 //-------------- MEDIA QUERIES -------------//
 
-@media only screen and (max-width: 460px) and (orientation: portrait)
-
-  .innerContainer
-    grid-template-columns: 1fr 0fr
-  
-  #title
-    padding-top: 9px
-    width: 100%
+@media only screen and (min-width: 300px) and (orientation: portrait)
 
   .noMobile
     display: none
 
-  ul.menu
-    align-content: space-between
-    height: 100vh
+  .yesMobile
+    display: block
 
   ul.menu
+    height: 100vh
     & > li
       &:nth-child(3)
-        margin-top: 5px
-        font-size: 2em
+        margin-top: 9px
    
   ul.menu > li.item
     padding: 5px 0
-    height: min-content
     font-size: 1.7em
+
   
     
       
