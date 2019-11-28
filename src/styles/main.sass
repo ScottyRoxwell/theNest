@@ -12,7 +12,7 @@ body
 
 #introDiv
   display: grid
-  grid-template-columns: .9fr 8fr 10fr .9fr
+  grid-template-columns: .2fr 5fr 5fr .2fr
   width: 100%
   height: 100vh
   position: absolute
@@ -32,12 +32,6 @@ body
     display: block
     margin: 0 auto
     text-align: center
-    margin: 0 auto
-    display: block
-    font-size: 10em
-    color: #ffffff
-    top: 40vh
-    text-shadow: 0px 0px 12px #fff
 
 .active
   max-height: 100vh
@@ -46,7 +40,7 @@ body
   perspective: 1000px
   opacity: .7
   li
-    transform-origin: -40px 0 500px
+    transform-origin: -40px 0 200px
 
 .menuOn
   li
@@ -54,9 +48,10 @@ body
         &:nth-child(#{$i})
           animation:
             name: menuOn
-            duration: 160ms *$i
+            duration: 2160ms *$i/8
             timing-function: ease-in-out
             fill-mode: forwards
+            delay: $i*-.01s
   
 .menuOff
   li
@@ -71,7 +66,7 @@ body
 @keyframes menuOn
   0%
     opacity: 0
-    transform: rotateY(-90deg) translateY(0px) translateX(0px)
+    transform: rotateY(-270deg) translateY(0px) translateX(0px)
   100%
     opacity: 1
     transform: rotateY(0deg) traslateY(0px) translateX(0px)
@@ -112,7 +107,7 @@ body
   width: 100%
   height: 100%
   position: absolute
-  z-index: -1
+  z-index: 0
   
 @keyframes fadeIn
   0%
@@ -125,28 +120,11 @@ body
     opacity: 1
   100%
     opacity: 0
-
-.backSplash
-  position: absolute
-  z-index: 0
-  background: -webkit-linear-gradient(left, rgba(0,0,0,.5), rgba(255,255,255,.01));
-  background: -moz-linear-gradient(left, rgba(0,0,0,.5), rgba(255,255,255,.01));
-  background: linear-gradient(right, rgba(0,0,0,.5), rgba(255,255,255,.01));
-  color: white
-  top: 5vh
-  left: 10vh
-  height: auto
-  animation:
-    name: grow
-    duration: .2s
-    timing-function: ease-in-out
-    delay: 1s
-    fill-mode: forwards
   
 .innerContainer
-  margin: 15px
   display: grid
-  grid-template-columns: .4fr 4fr 1fr 5fr 1fr
+  grid-template-columns: 5fr 5fr
+  // grid-gap: 10px 10px
   height: 100vh
   opacity: 1
   // animation:
@@ -176,8 +154,6 @@ body
 ul.menu
   display: flex
   flex-direction: column
-  justify-content: space-between
-  height: 100%
   width: 100%
   li
     font-size: 4em
@@ -212,25 +188,15 @@ ul.menu > li.item
 ul.socialMedia
   width: 100%
   height: min-content
-  margin-left: 10px 
-  margin-top: 10px
   display: flex
   flex-direction: row
   justify-content: space-around
-  // align-items: flex-end
   li
-    font-size: .5em
-    &:first-child
-      margin-left: -35px
-      img
-        width: 80%
-    &:nth-child(2)
-      img
-        width: 95%
+    img
+      width: 80%
     &:nth-child(3)
-      margin-top: -3px
       img
-        width: 62%
+        margin-top: -4px
 
 .right
   img
@@ -255,11 +221,10 @@ ul.socialMedia
 //-------------- MEDIA QUERIES -------------//
 
 @media (max-width: 460px)
-  .innerContainer
-    grid-template-columns: .4fr 1fr .4fr
   
   #title
-    width: 80%
+    padding-top: 9px
+    width: 100%
 
   .noMobile
     display: none
@@ -267,20 +232,21 @@ ul.socialMedia
   ul.menu
     display: flex
     flex-direction: column
-    align-content: space-between
+    align-content: flex-start
+    width: 100%
 
   ul.menu
     li
       &:nth-child(3)
-        font-size: 3.2em
+        margin-top: 5px
+        font-size: 2em
    
-  ul.menu > li
-    .item
-      margin: 2px 0
-      padding: 0
-      height: auto
-    a
-      font-size: .73em
+  ul.menu > li.item
+    margin: 5px 0
+    padding: 5px 0
+    height: min-content
+    font-size: 1.7em
+      
   
   ul.socialMedia
     display: flex
@@ -288,19 +254,6 @@ ul.socialMedia
     justify-content: space-around
     li
       font-size: .5em
-      margin: 0
-      img
-        width: 100%
-        margin: 0
-      &:nth-child(2)
-        img
-          width: 122%
-          margin: 0
-      &:nth-child(3)
-        img
-          width: 72%
-          margin: -2px 0 0 32px
-
   
     
       
