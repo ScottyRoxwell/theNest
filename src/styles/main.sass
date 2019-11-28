@@ -44,7 +44,7 @@ body
 
 .menuOn
   li
-    @for $i from 1 through 11
+    @for $i from 1 through 12
         &:nth-child(#{$i})
           animation:
             name: menuOn
@@ -155,7 +155,7 @@ ul.menu
   display: flex
   flex-direction: column
   width: 100%
-  li
+  & > li
     font-size: 4em
     opacity: 0
     &:nth-child(2)
@@ -168,13 +168,16 @@ ul.menu
       font-size: 4.3em
     &:nth-child(4)
       margin-top: 2%
-    &:nth-child(10)
-      margin-bottom: 6%
-    &:last-child
-      margin-bottom: 25px
+    // &:nth-child(10)
+    //   margin-bottom: 6%
   a
     text-decoration: none
     color: white
+
+ul.menu > li.openTable
+  img
+    width: 90%
+    margin: 5px
 
 ul.menu > li.item
   background-color: rgba(255,255,255,.1)
@@ -191,12 +194,8 @@ ul.socialMedia
   display: flex
   flex-direction: row
   justify-content: space-around
-  li
-    img
-      width: 80%
-    &:nth-child(3)
-      img
-        margin-top: -4px
+  & > li > a > img
+    width: 80%
 
 .right
   img
@@ -221,6 +220,9 @@ ul.socialMedia
 //-------------- MEDIA QUERIES -------------//
 
 @media (max-width: 460px)
+
+  .innerContainer
+    grid-template-columns: 1fr 0fr
   
   #title
     padding-top: 9px
@@ -230,30 +232,19 @@ ul.socialMedia
     display: none
 
   ul.menu
-    display: flex
-    flex-direction: column
-    align-content: flex-start
-    width: 100%
+    align-content: space-between
+    height: 100vh
 
   ul.menu
-    li
+    & > li
       &:nth-child(3)
         margin-top: 5px
         font-size: 2em
    
   ul.menu > li.item
-    margin: 5px 0
     padding: 5px 0
     height: min-content
     font-size: 1.7em
-      
-  
-  ul.socialMedia
-    display: flex
-    flex-direction: row
-    justify-content: space-around
-    li
-      font-size: .5em
   
     
       
