@@ -118,8 +118,9 @@ function loadProgram(){
 
   function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+    
     cameraControls(window.innerWidth,window.innerHeight);
+    camera.updateProjectionMatrix();
     composer.setSize( window.innerWidth, window.innerHeight );
   }
 
