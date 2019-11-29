@@ -32,7 +32,7 @@ function cameraControls(w,h){
     camera.lookAt(0,0,0);
   }
 }
-// cameraControls(width);
+cameraControls(width);
 
 const renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -120,7 +120,7 @@ function loadProgram(){
   function onWindowResize(){
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-    // cameraControls(window.innerWidth,window.innerHeight);
+    cameraControls(window.innerWidth,window.innerHeight);
     composer.setSize( window.innerWidth, window.innerHeight );
   }
 
