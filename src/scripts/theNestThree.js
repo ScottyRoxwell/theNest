@@ -34,7 +34,7 @@ function cameraControls(w,h){
 }
 cameraControls(width);
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({precision: mediump});
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(width,height);
 const canvas = document.getElementById('canvas');
