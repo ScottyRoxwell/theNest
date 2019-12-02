@@ -8,7 +8,7 @@ const items = document.querySelectorAll('.item');
 const title = document.getElementById('title');
 const menuPic = document.getElementById('menuPic');
 
-alert(`${window.screen.width} X ${window.screen.height}`)
+// alert(`${window.screen.width} X ${window.screen.height}`)
 
 // Clicking the menu in and out
 // container.addEventListener('click',(e)=>{
