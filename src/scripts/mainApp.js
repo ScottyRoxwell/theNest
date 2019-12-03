@@ -10,7 +10,7 @@ const menuPic = document.getElementById('menuPic');
 
 // alert(`${window.screen.width} X ${window.screen.height}`)
 
-let vh = window.innerHeight;
+let vh = window.innerHeight * 0.01;
 menu.style.setProperty('--vh', `${vh}px`);
 
 
