@@ -22,8 +22,6 @@ body
   background: -webkit-linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.2));
   background: -moz-linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.2));
   background: linear-gradient(right, rgba(0,0,0,.7), rgba(0,0,0,.2));
-  max-width: 100%
-  max-height: 0vh
   color: white
   transition: max-height .5s ease-in-out
   img
@@ -32,12 +30,12 @@ body
     text-align: center
 
 .active
-  max-height: 100vh
+  max-height: 100%
 
 .left
   perspective: 1000px
-  opacity: .7
-  height: 100vh
+  height: calc(var(--vh, 1vh) * 100)
+  opacity: 0.7
   li
     transform-origin: -40px 0 200px
 
@@ -122,7 +120,6 @@ body
     opacity: 0
   
 .innerContainer
-  height: 100vh
   opacity: 1
   // animation:
   //   name: fadeIn
@@ -157,7 +154,6 @@ ul.menu
   display: flex
   flex-direction: column
   justify-content: space-between
-  height: 100vh
   & > li
     font-size: 1.3em
     opacity: 0
@@ -241,7 +237,7 @@ ul.socialMedia
     display: block
 
   ul.menu
-    height: 100vh
+    height: 100%
     & > li
       &:nth-child(3)
         margin-top: 9px
@@ -262,7 +258,7 @@ ul.socialMedia
     font-size: 1.7em
 
   ul.menu
-    height: 100vh
+    height: 100%
     & > li
       &:nth-child(3)
         margin: 0px 0 0 36px

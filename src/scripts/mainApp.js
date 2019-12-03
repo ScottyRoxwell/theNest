@@ -10,6 +10,10 @@ const menuPic = document.getElementById('menuPic');
 
 // alert(`${window.screen.width} X ${window.screen.height}`)
 
+let vh = window.innerHeight;
+menu.style.setProperty('--vh', `${vh}px`);
+
+
 // Clicking the menu in and out
 // container.addEventListener('click',(e)=>{
 //   if(e.clientX < window.innerWidth/2){
