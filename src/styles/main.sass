@@ -38,6 +38,7 @@ body
   perspective: 1000px
   opacity: .7
   height: calc(var(--vh, 1vh)*100)
+  width: calc(var(--vw, 1vw)*100)
   li
     transform-origin: -40px 0 200px
 
@@ -224,20 +225,8 @@ ul.socialMedia
   100%
     transform: translateX(1400px)
 
-.noMobile
-  display: block
-
-.yesMobile
-  display: none
-
 //-------------- MEDIA QUERIES -------------//
 @media only screen and (min-width: 300px) and (orientation: portrait)
-
-  .noMobile
-    display: none
-
-  .yesMobile
-    display: block
 
   ul.menu
     height: 100%
@@ -249,29 +238,157 @@ ul.socialMedia
     padding: 5px 0
     font-size: 1.7em
 
-@media only screen and (min-width: 800px) and (orientation: landscape)
+@media only screen and (min-width: 300px) and (orientation: landscape)
 
   #title
-    width: 90%
-
-  .title
-    align-self: flex-start
+    width: 100%
+  
+  li.title
+    width: 50%
 
   ul.menu > li.item
-    font-size: 1.7em
+    font-size: 1.6em
 
   ul.menu
-    height: 100vh
+    height: 100%
     & > li
       &:nth-child(3)
-        margin: 0px 0 0 36px
+        margin: 0 0 0 15px
         align-self: flex-start
+        font-size: 2em
       &:nth-child(2)
-        margin-top: -10px
+        margin-top: 0
+        width: 50%
       &:nth-child(4)
         margin-top: -9px
+      &:nth-last-child(2)
+        margin-bottom: 6px
 
   ul.socialMedia
-    justify-content: flex-start
-    & > li > a > img
-      width: 40%
+    flex-direction: column
+    position: absolute
+    right: -500px
+    top: 0px
+    & > li
+      display: block
+      margin: -13px
+      & > a > img
+      width: 34%
+
+@media only screen and (min-width: 760px) and (orientation: portrait)
+
+  ul.menu > li.item
+    padding: 5px 0
+    font-size: 2.7em
+
+  ul.menu
+    height: 100%
+    & > li
+      &:nth-child(2)
+        margin-top: -6px
+      &:nth-child(3)
+        margin: 10px 0 0 15px
+        width: fit-content
+        font-size: 5em
+
+@media only screen and (min-width: 1020px) and (orientation: landscape)
+
+  li.title
+    width: 100%
+
+  ul.menu > li.item
+    padding: 5px 0
+    font-size: 2.7em
+
+  ul.menu
+    height: 100%
+    & > li
+      &:nth-child(2)
+        margin-top: -6px
+        width: 100%
+      &:nth-child(3)
+        margin: 10px 0 0 15px
+        width: fit-content
+        font-size: 5em
+
+  ul.socialMedia
+    right: -880px
+    top: 380px
+    & > li
+      display: block
+      margin: -13px
+      & > a > img
+      width: 34%
+
+@media only screen and (min-width: 1020px) and (orientation: portrait)
+
+  ul.menu
+    height: 100%
+    & > li
+      &:nth-child(2)
+        margin-top: -12px
+      &:nth-child(3)
+        margin: 10px 0 -20px 25px
+        width: fit-content
+        font-size: 7em
+
+  ul.menu > li.item
+    padding: 5px 0
+    font-size: 4em
+
+@media only screen and (min-width: 1360px) and (orientation: landscape)
+
+  li.title
+    width: 150%
+
+  ul.menu
+    height: 100%
+    & > li
+      &:nth-child(2)
+        margin-top: -12px
+        width: 150%
+      &:nth-child(3)
+        margin: 10px 0 0 55px
+        width: fit-content
+        font-size: 6em
+
+  ul.menu > li.item
+    padding: 5px 0
+    font-size: 3.5em
+
+  ul.socialMedia
+    right: -1160px
+    top: 530px
+  
+@media only screen and (min-width: 1380px)
+
+  li.title
+    width: 70%
+    margin-top: -20px
+
+  ul.menu
+    height: 100%
+    margin-left: 90px
+    width: 110%
+    & > li
+      &:nth-child(2)
+        margin-top: 0px
+        width: 70%
+      &:nth-child(3)
+        margin: 20px 0 0 55px
+        width: fit-content
+        font-size: 6em
+
+  ul.socialMedia
+    position: relative
+    top: 0
+    right: 0
+    flex-direction: row
+    width: 50%
+    & > li
+      & > a > img
+      width: 35%
+
+
+
+      

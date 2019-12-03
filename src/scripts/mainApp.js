@@ -7,11 +7,16 @@ const container = document.getElementById('introDiv');
 const items = document.querySelectorAll('.item');
 const title = document.getElementById('title');
 const menuPic = document.getElementById('menuPic');
-
+let vh,vw;
 // alert(`${window.screen.width} X ${window.screen.height}`)
+if(window.screen.height > window.screen.width){
+  vh = window.innerHeight * 0.01;
+  menu.style.setProperty('--vh', `${vh}px`);
+} else {
+  vh = window.innerWidth * 0.01;
+  menu.style.setProperty('--vw', `${vw}px`);
+}
 
-let vh = window.innerHeight * 0.01;
-menu.style.setProperty('--vh', `${vh}px`);
 
 
 // Clicking the menu in and out
@@ -60,11 +65,19 @@ let x = 0;
 let px,dx;
 (function animate(){
 
-    // Nest Title Pulse
-    x += .01;
-    px = Math.cos(x);
-    dx = 1-Math.pow(Math.max(0,Math.abs(px)*2-1), 3);
-    title.style.opacity = THREE.Math.mapLinear(dx,-1,1,.5,1);
+  if(window.screen.height > window.screen.width){
+    vh = window.innerHeight * 0.01;
+    menu.style.setProperty('--vh', `${vh}px`);
+  } else {
+    vh = window.innerWidth * 0.01;
+    menu.style.setProperty('--vw', `${vw}px`);
+  }
+
+  // Nest Title Pulse
+  x += .01;
+  px = Math.cos(x);
+  dx = 1-Math.pow(Math.max(0,Math.abs(px)*2-1), 3);
+  title.style.opacity = THREE.Math.mapLinear(dx,-1,1,.5,1);
 
   requestAnimationFrame(animate);
 })();

@@ -160,15 +160,15 @@ function loadProgram(){
 
   let mouseX, mouseY, clientX, clientY;
 
-  // document.body.addEventListener('mousemove', moveNest);
+  document.body.addEventListener('mousemove', moveNest);
 
-  // function moveNest(e){
-  //   mouseX = THREE.Math.mapLinear(e.clientX,0,width,-width/2,width/2);
-  //   mouseY = THREE.Math.mapLinear(e.clientY,0,height,height/2,-height/2);
-  //   clientX = e.clientX;
-  //   clientY = e.clientY;
-  //   return mouseX, mouseY, clientX, clientY;
-  // }
+  function moveNest(e){
+    mouseX = THREE.Math.mapLinear(e.clientX,0,width,-width/2,width/2);
+    mouseY = THREE.Math.mapLinear(e.clientY,0,height,height/2,-height/2);
+    clientX = e.clientX;
+    clientY = e.clientY;
+    return mouseX, mouseY, clientX, clientY;
+  }
 
   // On Window Resize
   // window.addEventListener( 'resize', onWindowResize, false );
@@ -374,15 +374,15 @@ function loadProgram(){
   scene.add(light);
 
   // GROUND LIGHT
-  const groundLight = new THREE.SpotLight(0xddddff);
-  groundLight.angle = Math.PI/5;
-  groundLight.penumbra = .1;
-  groundLight.decay = 2;
-  groundLight.position.set(width/2*1.05,-height/2*1.01,10);
-  groundLight.target = new THREE.Object3D();
-  groundLight.target.position.set(100,-300,-10);
-  scene.add(groundLight.target);
-  scene.add(groundLight);
+  // const groundLight = new THREE.SpotLight(0xddddff);
+  // groundLight.angle = Math.PI/5;
+  // groundLight.penumbra = .1;
+  // groundLight.decay = 2;
+  // groundLight.position.set(width,height,10);
+  // groundLight.target = new THREE.Object3D();
+  // groundLight.target.position.set(100,-300,-10);
+  // scene.add(groundLight.target);
+  // scene.add(groundLight);
 
   // HEADLIGHTS
   const headlight1 = new THREE.SpotLight(0xbbbbff,0);
@@ -475,7 +475,7 @@ function loadProgram(){
       light1.intensity = THREE.Math.mapLinear(p,0,1,4.5,6);
       light2.intensity = THREE.Math.mapLinear(q,0,1,4.5,7);
       light3.intensity = THREE.Math.mapLinear(r,0,1,4.5,8);
-      groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
+      // groundLight.intensity = THREE.Math.mapLinear(p,0,1,1.5,1.8);
 
       xmasLights.forEach(light=>{
         light.intensity = THREE.Math.mapLinear(s/2,0,1,2,6)
@@ -491,7 +491,7 @@ function loadProgram(){
         let defaultIntesity = light.intensity;
         light.intensity = THREE.Math.mapLinear(distance,0,100,10,defaultIntesity);
       }
-      if(ddelta % 4 === 0) light.intensity = 0.5;
+      // if(ddelta % 84 === 0) light.intensity = 0.5;
     })
 
       // HEADLIGHT MOVEMENT
