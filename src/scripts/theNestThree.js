@@ -69,8 +69,9 @@ composer.setSize(width,height,false)
 
 function resizeRendererToDisplaySize(renderer){
   const domEl = renderer.domElement;
-  const width1 = domEl.clientWidth;
-  const height1 = domEl.clientHeight;
+  const pixelRatio = window.devicePixelRatio;
+  const width1 = domEl.clientWidth * pixelRatio | 0;
+  const height1 = domEl.clientHeight * pixelRatio | 0;
   const needsResize = domEl.width !== width1 || domEl.height !== height1;
   if(needsResize) composer.setSize(width1,height1,false);
   return needsResize;
