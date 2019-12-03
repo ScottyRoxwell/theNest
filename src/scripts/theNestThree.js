@@ -69,31 +69,32 @@ composer.setSize(width,height,false)
 
 function resizeRendererToDisplaySize(renderer){
   const domEl = renderer.domElement;
-  const pixelRatio = window.devicePixelRatio;
+  const pixelRatio = (window.screen.availWidth > 400) ? window.devicePixelRatio : window.devicePixelRatio * 0.5;
   const width1 = domEl.clientWidth * pixelRatio | 0;
   const height1 = domEl.clientHeight * pixelRatio | 0;
   const needsResize = domEl.width !== width1 || domEl.height !== height1;
   if(needsResize) composer.setSize(width1,height1,false);
+  cameraControls(width1)
   return needsResize;
 }
 
 // Moves camera along X axis according to screen width
-// function cameraControls(w,h){
-//   if(w <= 476){
-//     camera.position.x = 160;
-//     camera.lookAt(160,0,0);
-//   } else if(w <= 568){
-//     camera.position.x = 125;
-//     camera.lookAt(125,0,0);
-//   } else if(w <= 800){
-//     camera.position.x = 135;
-//     camera.lookAt(135,0,0);
-//   } else {
-//     camera.position.x = 0;
-//     camera.lookAt(0,0,0);
-//   }
-// }
-// cameraControls(width);
+function cameraControls(w,h){
+  if(w <= 476){
+    camera.position.x = 160;
+    camera.lookAt(160,0,0);
+  } else if(w <= 568){
+    camera.position.x = 125;
+    camera.lookAt(125,0,0);
+  } else if(w <= 800){
+    camera.position.x = 135;
+    camera.lookAt(135,0,0);
+  } else {
+    camera.position.x = 0;
+    camera.lookAt(0,0,0);
+  }
+}
+cameraControls(width);
 
 // const theNestTitle = document.createElement('img');
 // theNestTitle.src = '../images/theNestTitle3.png';
