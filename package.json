@@ -16,6 +16,7 @@
     "@babel/core": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.6.2",
+    "autoprefixer": "^9.7.3",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.2.0",
@@ -26,6 +27,7 @@
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "postcss-loader": "^3.0.0",
     "postprocessing": "^6.8.5",
     "pug-html-loader": "^1.1.5",
     "sass-loader": "^8.0.0",
@@ -42,5 +44,15 @@
     "core-js": "^3.2.1",
     "express": "^4.17.1",
     "three": "^0.109.0"
-  }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "last 2 version",
+    "not dead",
+    "iOS >= 9"
+  ]
 }
