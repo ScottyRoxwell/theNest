@@ -160,7 +160,7 @@ function loadProgram(){
 
   let mouseX, mouseY, clientX, clientY;
 
-  document.body.addEventListener('mousemove', moveNest);
+  document.body.addEventListener('pointermove', moveNest);
 
   function moveNest(e){
     mouseX = THREE.Math.mapLinear(e.clientX,0,width,-width/2,width/2);
