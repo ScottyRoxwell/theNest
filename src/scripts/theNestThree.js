@@ -74,7 +74,7 @@ function resizeRendererToDisplaySize(renderer){
   const height1 = domEl.clientHeight * pixelRatio | 0;
   const needsResize = domEl.width !== width1 || domEl.height !== height1;
   if(needsResize) composer.setSize(width1,height1,false);
-  cameraControls(width1)
+  cameraControls(window.innerWidth)
   return needsResize;
 }
 
@@ -87,14 +87,14 @@ function cameraControls(w,h){
     camera.position.x = 125;
     camera.lookAt(125,0,0);
   } else if(w <= 800){
-    camera.position.x = 135;
-    camera.lookAt(135,0,0);
+    camera.position.x = 115;
+    camera.lookAt(115,0,0);
   } else {
     camera.position.x = 0;
     camera.lookAt(0,0,0);
   }
 }
-cameraControls(width);
+cameraControls(window.innerWidth);
 
 // const theNestTitle = document.createElement('img');
 // theNestTitle.src = '../images/theNestTitle3.png';
